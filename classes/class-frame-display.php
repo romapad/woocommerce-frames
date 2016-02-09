@@ -66,13 +66,15 @@ class Product_Addon_Display {
 		wp_enqueue_script( 'woocommerce-addons', plugins_url( basename( dirname( dirname( __FILE__ ) ) ) ) . '/assets/js/addons' . $suffix . '.js', array( 'jquery', 'accounting' ), '1.0', true );
 
 		$params = array(
+			'price_display_suffix'         => esc_attr( get_option( 'woocommerce_price_display_suffix' ) ),
+			'ajax_url'                     => WC()->ajax_url(),
 			'i18n_addon_total'             => __( 'Options total:', 'woocommerce-product-addons' ),
 			'i18n_grand_total'             => __( 'Grand total:', 'woocommerce-product-addons' ),
 			'i18n_remaining'               => __( 'characters remaining', 'woocommerce-product-addons' ),
 			'currency_format_num_decimals' => absint( get_option( 'woocommerce_price_num_decimals' ) ),
 			'currency_format_symbol'       => get_woocommerce_currency_symbol(),
 			'currency_format_decimal_sep'  => esc_attr( stripslashes( get_option( 'woocommerce_price_decimal_sep' ) ) ),
-			'currency_format_thousand_sep' => esc_attr( stripslashes( get_option( 'woocommerce_price_thousand_sep' ) ) )
+			'currency_format_thousand_sep' => esc_attr( stripslashes( get_option( 'woocommerce_price_thousand_sep' ) ) ),
 		);
 
 		if ( ! function_exists( 'get_woocommerce_price_format' ) ) {
@@ -175,9 +177,18 @@ class Product_Addon_Display {
 			$display_price    = $tax_display_mode == 'incl' ? $the_product->get_price_including_tax() : $the_product->get_price_excluding_tax();
 		} else {
 			$display_price    = '';
+			$raw_price        = 0;
 		}
 
-		echo '<div id="product-addons-total" data-show-grand-total="' . ( apply_filters( 'woocommerce_product_addons_show_grand_total', true, $the_product ) ? 1 : 0 ) . '" data-type="' . esc_attr( $the_product->product_type ) . '" data-price="' . esc_attr( $display_price )  . '"></div>';
+		if ( get_option( 'woocommerce_prices_include_tax' ) === 'no' ) {
+			$tax_mode = 'excl';
+			$raw_price = $the_product->get_price_excluding_tax();
+		} else {
+			$tax_mode = 'incl';
+			$raw_price = $the_product->get_price_including_tax();
+		}
+
+		echo '<div id="product-addons-total" data-show-grand-total="' . ( apply_filters( 'woocommerce_product_addons_show_grand_total', true, $the_product ) ? 1 : 0 ) . '" data-type="' . esc_attr( $the_product->product_type ) . '" data-tax-mode="' . esc_attr( $tax_mode ) . '" data-tax-display-mode="' . esc_attr( $tax_display_mode ) . '" data-price="' . esc_attr( $display_price )  . '" data-raw-price="' . esc_attr( $raw_price ) . '" data-product-id="' . esc_attr( $post_id ) . '"></div>';
 	}
 
 	/**

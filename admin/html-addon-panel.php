@@ -57,17 +57,6 @@
 
 			var value = jQuery(this).val();
 
-			if ( value == 'custom' || value == 'custom_price' || value == 'custom_textarea' || value == 'input_multiplier' || value == 'custom_letters_only' || value == 'custom_digits_only' || value == 'custom_letters_or_digits' ) {
-				jQuery(this).closest('.woocommerce_product_addon').find('td.minmax_column, th.minmax_column').show();
-			} else {
-				jQuery(this).closest('.woocommerce_product_addon').find('td.minmax_column, th.minmax_column').hide();
-			}
-
-			if ( value == 'custom_price' ) {
-				jQuery(this).closest('.woocommerce_product_addon').find('td.price_column, th.price_column').hide();
-			} else {
-				jQuery(this).closest('.woocommerce_product_addon').find('td.price_column, th.price_column').show();
-			}
 
 			// Count the number of options.  If one (or less), disable the remove option buttons
 			var removeAddOnOptionButtons = jQuery(this).closest('.woocommerce_product_addon').find('button.remove_addon_option');

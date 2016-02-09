@@ -11,6 +11,7 @@ global $post;
 		<div class="handlediv" title="<?php _e( 'Click to toggle', 'woocommerce-product-addons' ); ?>"></div>
 		<strong><?php _e( 'Group', 'woocommerce-product-addons' ); ?> <span class="group_name"><?php if ( $addon['name'] ) echo '"' . esc_attr( $addon['name'] ) . '"'; ?></span> &mdash; </strong>
 		<select name="product_addon_type[<?php echo $loop; ?>]" class="product_addon_type">
+			<option <?php selected('grframes', $addon['type']); ?> value="checkbox"><?php _e('Frames', 'woocommerce-product-addons'); ?></option>		
 			<option <?php selected('checkbox', $addon['type']); ?> value="checkbox"><?php _e('Checkboxes', 'woocommerce-product-addons'); ?></option>
 			<option <?php selected('radiobutton', $addon['type']); ?> value="radiobutton"><?php _e('Radio buttons', 'woocommerce-product-addons'); ?></option>
 			<option <?php selected('select', $addon['type']); ?> value="select"><?php _e('Select box', 'woocommerce-product-addons'); ?></option>
@@ -52,16 +53,17 @@ global $post;
 					<table cellspacing="0" cellpadding="0">
 						<thead>
 							<tr>
-								<th><?php _e('Option Label', 'woocommerce-product-addons'); ?></th>
-								<th class="price_column"><?php _e('Option Price', 'woocommerce-product-addons'); ?></th>
-								<th class="minmax_column"><?php _e('Min', 'woocommerce-product-addons'); ?></th>
-								<th class="minmax_column"><?php _e('Max', 'woocommerce-product-addons'); ?></th>
+								<th><?php _e('Frame Label', 'woocommerce-product-addons'); ?></th>
+								<th class="price_column"><?php _e('Frame Price/metr', 'woocommerce-product-addons'); ?></th>
+								<th><?php _e('Width', 'woocommerce-product-addons'); ?></th>
+								<th><?php _e('Preview', 'woocommerce-product-addons'); ?></th>
+								<th><?php _e('Frame part', 'woocommerce-product-addons'); ?></th>
 								<th width="1%"></th>
 							</tr>
 						</thead>
 						<tfoot>
 							<tr>
-								<td colspan="5"><button type="button" class="add_addon_option button"><?php _e('New&nbsp;Option', 'woocommerce-product-addons'); ?></button></td>
+								<td colspan="6"><button type="button" class="add_addon_option button"><?php _e('New&nbsp;Option', 'woocommerce-product-addons'); ?></button></td>
 							</tr>
 						</tfoot>
 						<tbody>

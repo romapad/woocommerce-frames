@@ -9,7 +9,7 @@
 		<?php if ( ! empty( $option['label'] ) ) : ?>
 			<label><?php echo wptexturize( $option['label'] ) . ' ' . $price; ?></label>
 		<?php endif; ?>
-		<input type="text" class="input-text addon addon-custom" data-price="<?php echo get_product_addon_price_for_display( $option['price'] ); ?>" name="<?php echo $addon_key ?>[<?php echo $option_key; ?>]" value="<?php echo esc_attr( $current_value ); ?>" <?php if ( ! empty( $option['max'] ) ) echo 'maxlength="' . $option['max'] .'"'; ?> />
+		<input type="text" class="input-text addon addon-custom" data-raw-price="<?php echo esc_attr( $option['price'] ); ?>" data-price="<?php echo get_product_addon_price_for_display( $option['price'] ); ?>" name="<?php echo $addon_key ?>[<?php echo $option_key; ?>]" value="<?php echo esc_attr( $current_value ); ?>" <?php if ( ! empty( $option['max'] ) ) echo 'maxlength="' . $option['max'] .'"'; ?> />
 	</p>
 
 <?php endforeach; ?>

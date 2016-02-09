@@ -60,6 +60,15 @@ jQuery( document ).ready( function($) {
 			var $totals       = $cart.find( '#product-addons-total' );
 			var product_price = $totals.data( 'price' );
 			var product_type  = $totals.data( 'type' );
+			var product_id    = $totals.data( 'product-id' );
+
+			// We will need some data about tax modes (both store and display)
+			// and 'raw prices' (prices that don't take into account taxes) so we can use them in some
+			// instances without making an ajax call to calculate taxes
+			var product_raw      = $totals.data( 'raw-price' );
+			var tax_mode         = $totals.data( 'tax-mode' );
+			var tax_display_mode = $totals.data('tax-display-mode' );
+			var total_raw         = 0;
 
 			// Move totals
 			if ( product_type == 'variable' || product_type == 'variable-subscription' ) {
@@ -68,6 +77,7 @@ jQuery( document ).ready( function($) {
 
 			$cart.find( '.addon' ).each( function() {
 				var addon_cost = 0;
+				var addon_cost_raw = 0;
 
 				if ( $(this).is('.addon-custom-price') ) {
 					addon_cost = $(this).val();
@@ -82,21 +92,33 @@ jQuery( document ).ready( function($) {
 						$(this).closest('p').find('.addon-alert').hide();
 					}
 					addon_cost = $(this).data('price') * $(this).val();
+					addon_cost_raw = $(this).data('raw-price') * $(this).val();
 				} else if ( $(this).is('.addon-checkbox, .addon-radio') ) {
-					if ( $(this).is(':checked') )
+					if ( $(this).is(':checked') ) {
 						addon_cost = $(this).data('price');
+						addon_cost_raw = $(this).data('raw-price');
+					}
 				} else if ( $(this).is('.addon-select') ) {
-					if ( $(this).val() )
+					if ( $(this).val() ) {
 						addon_cost = $(this).find('option:selected').data('price');
+						addon_cost_raw = $(this).find('option:selected').data('raw-price');
+					}
 				} else {
-					if ( $(this).val() )
+					if ( $(this).val() ) {
 						addon_cost = $(this).data('price');
+						addon_cost_raw = $(this).data('raw-price');
+					}
 				}
 
-				if ( ! addon_cost )
+				if ( ! addon_cost ) {
 					addon_cost = 0;
+				}
+				if ( ! addon_cost_raw ) {
+					addon_cost_raw = 0;
+				}
 
 				total = parseFloat( total ) + parseFloat( addon_cost );
+				total_raw = parseFloat( total_raw ) + parseFloat( addon_cost_raw );
 			} );
 
 			if ( $cart.find('input.qty').size() ) {
@@ -131,6 +153,14 @@ jQuery( document ).ready( function($) {
 
 				}
 
+				var formatted_raw_total = accounting.formatMoney( total_raw + product_raw, {
+					symbol 		: woocommerce_addons_params.currency_format_symbol,
+					decimal 	: woocommerce_addons_params.currency_format_decimal_sep,
+					thousand	: woocommerce_addons_params.currency_format_thousand_sep,
+					precision 	: woocommerce_addons_params.currency_format_num_decimals,
+					format		: woocommerce_addons_params.currency_format
+				} );
+
 				var subscription_details = false;
 
 				if ( $('.single_variation_wrap .subscription-details').length ) {
@@ -146,21 +176,105 @@ jQuery( document ).ready( function($) {
 					}
 				}
 
-				html = '<dl class="product-addon-totals"><dt>' + woocommerce_addons_params.i18n_addon_total + '</dt><dd><strong><span class="amount">' + formatted_addon_total + '</span></strong></dd>';
+				var html = '<dl class="product-addon-totals"><dt>' + woocommerce_addons_params.i18n_addon_total + '</dt><dd><strong><span class="amount">' + formatted_addon_total + '</span></strong></dd>';
 
 				if ( formatted_grand_total && '1' == $totals.data( 'show-grand-total' ) ) {
-					html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span></strong></dd>';
+
+					// To show our "price display suffix" we have to do some magic since the string can contain variables (excl/incl tax values)
+					// so we have to take our grand total and find out what the tax value is, which we can do via an ajax call
+					// if its a simple string, or no string at all, we can output the string without an extra call
+					var price_display_suffix = '';
+
+					// no sufix is present, so we can just output the total
+					if ( ! woocommerce_addons_params.price_display_suffix ) {
+						html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span></strong></dd></dl>';
+						$totals.html( html );
+						$( 'body' ).trigger( 'updated_addons' );
+						return;
+					}
+
+					// a suffix is present, but no special labels are used - meaning we don't need to figure out any other special values - just display the playintext value
+					if ( false === ( woocommerce_addons_params.price_display_suffix.indexOf( '{price_including_tax}' ) > -1 ) && false === ( woocommerce_addons_params.price_display_suffix.indexOf( '{price_excluding_tax}' ) > -1 ) ) {
+						html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + woocommerce_addons_params.price_display_suffix + '</strong></dd></dl>';
+						$totals.html( html );
+						$( 'body' ).trigger( 'updated_addons' );
+						return;
+					}
+
+					// If prices are entered exclusive of tax but display inclusive, we have enough data from our totals above
+					// to do a simple replacement and output the totals string
+					if (  'excl' === tax_mode && 'incl' === tax_display_mode ) {
+						price_display_suffix = '<small class="woocommerce-price-suffix">' + woocommerce_addons_params.price_display_suffix + '</small>';
+						price_display_suffix = price_display_suffix.replace( '{price_including_tax}', formatted_grand_total );
+						price_display_suffix = price_display_suffix.replace( '{price_excluding_tax}', formatted_raw_total );
+						html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + price_display_suffix + ' </strong></dd></dl>';
+						$totals.html( html );
+						$( 'body' ).trigger( 'updated_addons' );
+						return;
+					}
+
+					// Prices are entered inclusive of tax mode but displayed exclusive, we have enough data from our totals above
+					// to do a simple replacement and output the totals string.
+					if ( 'incl' === tax_mode && 'excl' === tax_display_mode ) {
+						price_display_suffix = '<small class="woocommerce-price-suffix">' + woocommerce_addons_params.price_display_suffix + '</small>';
+						price_display_suffix = price_display_suffix.replace( '{price_including_tax}', formatted_raw_total );
+						price_display_suffix = price_display_suffix.replace( '{price_excluding_tax}', formatted_grand_total );
+						html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + price_display_suffix + ' </strong></dd></dl>';
+						$totals.html( html );
+						$( 'body' ).trigger( 'updated_addons' );
+						return;
+					}
+
+					// Based on the totals/info and settings we have, we need to use the get_price_*_tax functions
+					// to get accurate totals. We can get these values with a special Ajax function
+					$.ajax( {
+						type: 'POST',
+						url:  woocommerce_addons_params.ajax_url,
+						data: {
+							action: 'wc_product_addons_calculate_tax',
+							total:  product_total_price + total,
+							product_id: product_id
+						},
+						success: 	function( code ) {
+							result = $.parseJSON( code );
+							if ( result.result == 'SUCCESS' ) {
+								price_display_suffix = '<small class="woocommerce-price-suffix">' + woocommerce_addons_params.price_display_suffix + '</small>';
+								var formatted_price_including_tax = accounting.formatMoney( result.price_including_tax, {
+									symbol 		: woocommerce_addons_params.currency_format_symbol,
+									decimal 	: woocommerce_addons_params.currency_format_decimal_sep,
+									thousand	: woocommerce_addons_params.currency_format_thousand_sep,
+									precision 	: woocommerce_addons_params.currency_format_num_decimals,
+									format		: woocommerce_addons_params.currency_format
+								} );
+								var formatted_price_excluding_tax = accounting.formatMoney( result.price_excluding_tax, {
+									symbol 		: woocommerce_addons_params.currency_format_symbol,
+									decimal 	: woocommerce_addons_params.currency_format_decimal_sep,
+									thousand	: woocommerce_addons_params.currency_format_thousand_sep,
+									precision 	: woocommerce_addons_params.currency_format_num_decimals,
+									format		: woocommerce_addons_params.currency_format
+								} );
+								price_display_suffix = price_display_suffix.replace( '{price_including_tax}', formatted_price_including_tax );
+								price_display_suffix = price_display_suffix.replace( '{price_excluding_tax}', formatted_price_excluding_tax );
+								html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + price_display_suffix + ' </strong></dd></dl>';
+								$totals.html( html );
+								$( 'body' ).trigger( 'updated_addons' );
+							} else {
+								console.log( result );
+								html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span></strong></dd></dl>';
+								$totals.html( html );
+								$( 'body' ).trigger( 'updated_addons' );
+							}
+						},
+						error: function() {
+							html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span></strong></dd></dl>';
+							$totals.html( html );
+							$( 'body' ).trigger( 'updated_addons' );
+						}
+					} );
 				}
-
-				html = html + '</dl>';
-
-				$totals.html( html );
-
 			} else {
 				$totals.empty();
 			}
-
-			$( 'body' ).trigger( 'updated_addons' );
 
 		} );
 
