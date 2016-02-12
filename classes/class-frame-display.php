@@ -32,8 +32,6 @@ class Product_Addon_Display {
 		add_filter( 'woocommerce_product_supports', array( $this, 'ajax_add_to_cart_supports' ), 10, 3 );
 		add_filter( 'woocommerce_is_purchasable', array( $this, 'prevent_purchase_at_grouped_level' ), 10, 2 );
 
-		// View order
-		add_filter( 'woocommerce_order_item_display_meta_value', array( $this, 'fix_file_uploaded_display' ) );
 	}
 
 	/**
@@ -138,17 +136,16 @@ class Product_Addon_Display {
 				if ( ! isset( $addon['field-name'] ) )
 					continue;
 
-				woocommerce_get_template( 'addons/addon-start.php', array(
+				woocommerce_get_template( 'addon-start.php', array(
 						'addon'       => $addon,
 						'required'    => $addon['required'],
 						'name'        => $addon['name'],
 						'description' => $addon['description'],
-						'type'        => $addon['type'],
 					), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
 
 				echo $this->get_addon_html( $addon );
 
-				woocommerce_get_template( 'addons/addon-end.php', array(
+				woocommerce_get_template( 'addon-end.php', array(
 						'addon'    => $addon,
 					), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
 			}
@@ -201,13 +198,13 @@ class Product_Addon_Display {
 	public function get_addon_html( $addon ) {
 		ob_start();
 
-		$method_name   = 'get_' . $addon['type'] . '_html';
+		$method_name   = 'get_checkbox_html';
 
 		if ( method_exists( $this, $method_name ) ) {
 			$this->$method_name( $addon );
 		}
 
-		do_action( 'woocommerce-product-addons_get_' . $addon['type'] . '_html', $addon );
+		do_action( 'woocommerce-product-addons_get_checkbox_html', $addon );
 
 		return ob_get_clean();
 	}
@@ -219,148 +216,7 @@ class Product_Addon_Display {
 	 * @return void
 	 */
 	public function get_checkbox_html( $addon ) {
-		woocommerce_get_template( 'addons/checkbox.php', array(
-				'addon' => $addon,
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
-	}
-
-	/**
-	 * get_radiobutton_html function.
-	 *
-	 * @access public
-	 * @param mixed $addon
-	 * @return void
-	 */
-	public function get_radiobutton_html( $addon ) {
-		woocommerce_get_template( 'addons/radiobutton.php', array(
-				'addon' => $addon,
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
-	}
-
-	/**
-	 * get_select_html function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function get_select_html( $addon ) {
-		woocommerce_get_template( 'addons/select.php', array(
-				'addon' => $addon,
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
-	}
-
-	/**
-	 * get_custom_html function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function get_custom_html( $addon ) {
-		woocommerce_get_template( 'addons/custom.php', array(
-				'addon' => $addon,
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
-	}
-
-	/**
-	 * get_custom_textarea function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function get_custom_textarea_html( $addon ) {
-		woocommerce_get_template( 'addons/custom_textarea.php', array(
-				'addon' => $addon,
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
-	}
-
-	/**
-	 * get_file_upload_html function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function get_file_upload_html( $addon ) {
-		woocommerce_get_template( 'addons/file_upload.php', array(
-				'addon'    => $addon,
-				'max_size' => size_format( wp_max_upload_size() ),
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
-	}
-
-	/**
-	 * get_custom_price_html function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function get_custom_price_html( $addon ) {
-		woocommerce_get_template( 'addons/custom_price.php', array(
-				'addon' => $addon,
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
-	}
-
-	/**
-	 * get_custom_letters_only_html function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function get_custom_letters_only_html( $addon ) {
-		woocommerce_get_template( 'addons/custom_pattern.php', array(
-				'addon' => $addon,
-				'pattern' => '[A-Za-z]+',
-				'title' => __( 'Please enter letters only', 'woocommerce-product-addons' )
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
-	}
-
-	/**
-	 * get_custom_digits_only_html function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function get_custom_digits_only_html( $addon ) {
-		woocommerce_get_template( 'addons/custom_pattern.php', array(
-				'addon' => $addon,
-				'pattern' => '[0-9]+',
-				'title' => __( 'Please enter digits only', 'woocommerce-product-addons' )
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
-	}
-
-	/**
-	 * get_custom_letters_or_digits_html function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function get_custom_letters_or_digits_html( $addon ) {
-		woocommerce_get_template( 'addons/custom_pattern.php', array(
-				'addon' => $addon,
-				'pattern' => '[A-Za-z0-9]+',
-				'title' => __( 'Please enter letters or digits only', 'woocommerce-product-addons' )
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
-	}
-
-	/**
-	 * get_custom_email_html function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function get_custom_email_html( $addon ) {
-		woocommerce_get_template( 'addons/custom_email.php', array(
-				'addon' => $addon,
-				'title' => __( 'Please enter an email address', 'woocommerce-product-addons' )
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
-	}
-
-	/**
-	 * get_input_multiplier_html function.
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function get_input_multiplier_html( $addon ) {
-		woocommerce_get_template( 'addons/input_multiplier.php', array(
+		woocommerce_get_template( 'frontend.php', array(
 				'addon' => $addon,
 			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
 	}
@@ -461,22 +317,6 @@ class Product_Addon_Display {
 		return $purchasable;
 	}
 
-	/**
-	 * Fix the display of uploaded files.
-	 *
-	 * @param  string $meta_value
-	 * @return string
-	 */
-	public function fix_file_uploaded_display( $meta_value ) {
-		global $wp;
-
-		if ( ! isset( $wp->query_vars[ 'wc-api' ] ) && false !== strpos( $meta_value, '/product_addons_uploads/' ) ) {
-			$file_url   = $meta_value;
-			$meta_value = basename( $meta_value );
-			$meta_value = '<a href="' . esc_url( $file_url ) . '">' . esc_html( $meta_value ) . '</a>';
-		}
-		return $meta_value;
-	}
 }
 
 $GLOBALS['Product_Addon_Display'] = new Product_Addon_Display();

@@ -21,14 +21,6 @@
 
 	<div class="toolbar">
 		<button type="button" class="button add_new_addon button-primary"><?php _e( 'New Addon Group', 'woocommerce-product-addons' ); ?></button>
-
-		<button type="button" class="button import_addons"><?php _e( 'Import', 'woocommerce-product-addons' ); ?></button>
-		<button type="button" class="button export_addons"><?php _e( 'Export', 'woocommerce-product-addons' ); ?></button>
-
-		<textarea name="export_product_addon" class="export" cols="20" rows="5" readonly="readonly"><?php echo esc_textarea( serialize( $product_addons ) ); ?></textarea>
-
-		<textarea name="import_product_addon" class="import" cols="20" rows="5" placeholder="<?php _e('Paste exported form data here and then save to import fields. The imported fields will be appended.', 'woocommerce-product-addons'); ?>"></textarea>
-
 	</div>
 	<?php if( isset($post->ID) ):?>
     <div class="options_group">
@@ -52,11 +44,6 @@
 				jQuery(this).closest('.woocommerce_product_addon').find('span.group_name').text( '"' + jQuery(this).val() + '"' );
 			else
 				jQuery(this).closest('.woocommerce_product_addon').find('span.group_name').text('');
-		})
-		.on( 'change', 'select.product_addon_type', function() {
-
-			var value = jQuery(this).val();
-
 
 			// Count the number of options.  If one (or less), disable the remove option buttons
 			var removeAddOnOptionButtons = jQuery(this).closest('.woocommerce_product_addon').find('button.remove_addon_option');
@@ -86,8 +73,6 @@
 
 			jQuery(this).closest('.woocommerce_product_addon .data').find('tbody').append( html );
 
-			jQuery('select.product_addon_type').change();
-
 			return false;
 		})
 		.on( 'click', '.add_new_addon', function() {
@@ -100,7 +85,6 @@
 				$addon['name'] 			= '';
 				$addon['description']	= '';
 				$addon['required'] 		= '';
-				$addon['type'] 			= 'checkbox';
 				$addon['options'] 		= array(
 					Product_Addon_Admin::get_new_addon_option()
 				);
@@ -116,8 +100,6 @@
 
 			jQuery('.woocommerce_product_addons').append( html );
 
-			jQuery('select.product_addon_type').change();
-
 			return false;
 		})
 		.on( 'click', '.remove_addon', function() {
@@ -132,28 +114,6 @@
 
 			return false;
 		})
-		.find('select.product_addon_type').change();
-
-		// Import / Export
-		jQuery('#product_addons_data').on('click', '.export_addons', function() {
-
-			jQuery('#product_addons_data textarea.import').hide();
-			jQuery('#product_addons_data textarea.export').slideToggle('500', function() {
-				jQuery(this).select();
-			});
-
-			return false;
-		});
-
-		jQuery('#product_addons_data').on('click', '.import_addons', function() {
-
-			jQuery('#product_addons_data textarea.export').hide();
-			jQuery('#product_addons_data textarea.import').slideToggle('500', function() {
-				jQuery(this).val('');
-			});
-
-			return false;
-		});
 
 		// Sortable
 		jQuery('.woocommerce_product_addons').sortable({
@@ -206,7 +166,6 @@
 			if (answer) {
 				var addOn = jQuery(this).closest('.woocommerce_product_addon');
 				jQuery(this).closest('tr').remove();
-				addOn.find('select.product_addon_type').change();
 			}
 
 			return false;

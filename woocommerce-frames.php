@@ -2,7 +2,7 @@
 /*
 Plugin Name: WooCommerce Frames
 Plugin URI: http://romapad.ru/
-Description: WooCommerce Product Add-ons lets you add extra options to products which the user can select. Add-ons can be checkboxes, a select box, or custom input. Each option can optionally be given a price which is added to the cost of the product.
+Description: WooCommerce Frames lets you cell frames in your paintings or photo store. User may choose wich frame is suitable for thier chosen picture, see preview of picture in frame and finally buy it.
 Version: 0.1
 Author: romapad
 Author URI: http://romapad.ru
@@ -30,18 +30,18 @@ if ( is_woocommerce_active() ) {
 	/**
 	 * Main class
 	 */
-	class WC_Product_Addons {
+	class WC_Frames {
 
 		/**
 		 * Constructor
 		 */
 		public function __construct() {
 			if ( is_admin() ) {
-				include_once( 'admin/class-product-addon-admin.php' );
+				include_once( 'admin/class-frame-admin.php' );
 			}
 
-			include_once( 'classes/class-product-addon-display.php' );
-			include_once( 'classes/class-product-addon-cart.php' );
+			include_once( 'classes/class-frame-display.php' );
+			include_once( 'classes/class-frame-cart.php' );
 			include_once( 'classes/class-wc-addons-ajax.php' );
 
 			add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
@@ -52,14 +52,14 @@ if ( is_woocommerce_active() ) {
 		 * Localisation
 		 */
 		public function load_plugin_textdomain() {
-			load_plugin_textdomain( 'woocommerce-product-addons', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+			load_plugin_textdomain( 'woocommerce-frames', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		}
 
 		/**
 		 * Init post types used for addons
 		 */
 		public function init_post_types() {
-			register_post_type( "global_product_addon",
+			register_post_type( "global_woo_frames",
 				array(
 					'public'              => false,
 					'show_ui'             => false,
@@ -75,11 +75,11 @@ if ( is_woocommerce_active() ) {
 				)
 			);
 
-			register_taxonomy_for_object_type( 'product_cat', 'global_product_addon' );
+			register_taxonomy_for_object_type( 'product_cat', 'global_woo_frames' );
 		}
 	}
 
-	new WC_Product_Addons();
+	new WC_Frames();
 
 	/**
 	 * Gets addons assigned to a product by ID
@@ -90,23 +90,23 @@ if ( is_woocommerce_active() ) {
 	 * @param  bool $inc_global Set to false to not include global addons.
 	 * @return array array of addons
 	 */
-	function get_product_addons( $post_id, $prefix = false, $inc_parent = true, $inc_global = true ) {
+	function get_frames( $post_id, $prefix = false, $inc_parent = true, $inc_global = true ) {
 		if ( ! $post_id ) {
 			return array();
 		}
 
 		$addons        = array();
 		$raw_addons    = array();
-		$product_terms = apply_filters( 'get_product_addons_product_terms', wp_get_post_terms( $post_id, 'product_cat', array( 'fields' => 'ids' ) ), $post_id );
-		$exclude       = get_post_meta( $post_id, '_product_addons_exclude_global', true );
+		$product_terms = apply_filters( 'get_frames_product_terms', wp_get_post_terms( $post_id, 'product_cat', array( 'fields' => 'ids' ) ), $post_id );
+		$exclude       = get_post_meta( $post_id, '_frames_exclude_global', true );
 
 		// Product Parent Level Addons
 		if ( $inc_parent && $parent_id = wp_get_post_parent_id( $post_id ) ) {
-			$raw_addons[10]['parent'] = apply_filters( 'get_parent_product_addons_fields', get_product_addons( $parent_id, $parent_id . '-', false, false ), $post_id, $parent_id );
+			$raw_addons[10]['parent'] = apply_filters( 'get_parent_frames_fields', get_frames( $parent_id, $parent_id . '-', false, false ), $post_id, $parent_id );
 		}
 
 		// Product Level Addons
-		$raw_addons[10]['product'] = apply_filters( 'get_product_addons_fields', array_filter( (array) get_post_meta( $post_id, '_product_addons', true ) ), $post_id );
+		$raw_addons[10]['product'] = apply_filters( 'get_frames_fields', array_filter( (array) get_post_meta( $post_id, '_frames', true ) ), $post_id );
 
 		// Global level addons (all products)
 		if ( '1' !== $exclude && $inc_global ) {
@@ -115,7 +115,7 @@ if ( is_woocommerce_active() ) {
 				'orderby'          => 'meta_value',
 				'order'            => 'ASC',
 				'meta_key'         => '_priority',
-				'post_type'        => 'global_product_addon',
+				'post_type'        => 'global_frames',
 				'post_status'      => 'publish',
 				'suppress_filters' => true,
 				'meta_query' => array(
@@ -126,23 +126,23 @@ if ( is_woocommerce_active() ) {
 				)
 			);
 
-			$global_addons = get_posts( $args );
+			$global_frames = get_posts( $args );
 
-			if ( $global_addons ) {
-				foreach ( $global_addons as $global_addon ) {
-					$priority                                     = get_post_meta( $global_addon->ID, '_priority', true );
-					$raw_addons[ $priority ][ $global_addon->ID ] = apply_filters( 'get_product_addons_fields', array_filter( (array) get_post_meta( $global_addon->ID, '_product_addons', true ) ), $global_addon->ID );
+			if ( $global_frames ) {
+				foreach ( $global_frames as $global_frame ) {
+					$priority                                     = get_post_meta( $global_frame->ID, '_priority', true );
+					$raw_frames[ $priority ][ $global_frame->ID ] = apply_filters( 'get_frames_fields', array_filter( (array) get_post_meta( $global_frame->ID, '_frames', true ) ), $global_addon->ID );
 				}
 			}
 
 			// Global level addons (categories)
 			if ( $product_terms ) {
-				$args = apply_filters( 'get_product_addons_global_query_args', array(
+				$args = apply_filters( 'get_frames_global_query_args', array(
 					'posts_per_page'   => -1,
 					'orderby'          => 'meta_value',
 					'order'            => 'ASC',
 					'meta_key'         => '_priority',
-					'post_type'        => 'global_product_addon',
+					'post_type'        => 'global_frames',
 					'post_status'      => 'publish',
 					'suppress_filters' => true,
 					'tax_query'        => array(
@@ -160,7 +160,7 @@ if ( is_woocommerce_active() ) {
 				if ( $global_addons ) {
 					foreach ( $global_addons as $global_addon ) {
 						$priority                                     = get_post_meta( $global_addon->ID, '_priority', true );
-						$raw_addons[ $priority ][ $global_addon->ID ] = apply_filters( 'get_product_addons_fields', array_filter( (array) get_post_meta( $global_addon->ID, '_product_addons', true ) ), $global_addon->ID );
+						$raw_addons[ $priority ][ $global_addon->ID ] = apply_filters( 'get_frames_fields', array_filter( (array) get_post_meta( $global_addon->ID, '_frames', true ) ), $global_addon->ID );
 					}
 				}
 			}
@@ -206,7 +206,7 @@ if ( is_woocommerce_active() ) {
 			}
 		}
 
-		return apply_filters( 'get_product_addons', $addons );
+		return apply_filters( 'get_frames', $addons );
 	}
 
 	/**

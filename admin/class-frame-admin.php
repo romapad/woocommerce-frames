@@ -234,10 +234,11 @@ class Product_Addon_Admin {
 	 */
 	public static function get_new_addon_option() {
 		$new_addon_option = array(
-			'label' => '',
-			'price' => '',
-			'min' => '',
-			'max' => ''
+			'label'   => '',
+			'price'   => '',
+			'width'   => '',
+			'preview' => '',
+            'part'    => ''
 		);
 
 		return apply_filters( 'woocommerce_product_addons_new_addon_option', $new_addon_option );
@@ -254,15 +255,15 @@ class Product_Addon_Admin {
 		if ( isset( $_POST[ 'product_addon_name' ] ) ) {
 			 $addon_name         = $_POST['product_addon_name'];
 			 $addon_description  = $_POST['product_addon_description'];
-			 $addon_type         = $_POST['product_addon_type'];
 			 $addon_position     = $_POST['product_addon_position'];
 			 $addon_required     = isset( $_POST['product_addon_required'] ) ? $_POST['product_addon_required'] : array();
 
 			 $addon_option_label = $_POST['product_addon_option_label'];
 			 $addon_option_price = $_POST['product_addon_option_price'];
 
-			 $addon_option_min   = $_POST['product_addon_option_min'];
-			 $addon_option_max   = $_POST['product_addon_option_max'];
+			 $addon_option_width   = $_POST['product_addon_option_width'];
+			 $addon_option_preview   = $_POST['product_addon_option_preview'];
+			 $addon_option_part   = $_POST['product_addon_option_part'];            
 
 			 for ( $i = 0; $i < sizeof( $addon_name ); $i++ ) {
 
@@ -273,20 +274,23 @@ class Product_Addon_Admin {
 				$addon_options 	= array();
 				$option_label  	= $addon_option_label[ $i ];
 				$option_price  	= $addon_option_price[ $i ];
-				$option_min		= $addon_option_min[ $i ];
-				$option_max		= $addon_option_max[ $i ];
+				$option_width	= $addon_option_width[ $i ];
+				$option_preview	= $addon_option_preview[ $i ];
+                $option_part	= $addon_option_part[ $i ]; 
 
 				for ( $ii = 0; $ii < sizeof( $option_label ); $ii++ ) {
 					$label 	= sanitize_text_field( stripslashes( $option_label[ $ii ] ) );
 					$price 	= wc_format_decimal( sanitize_text_field( stripslashes( $option_price[ $ii ] ) ) );
-					$min	= sanitize_text_field( stripslashes( $option_min[ $ii ] ) );
-					$max	= sanitize_text_field( stripslashes( $option_max[ $ii ] ) );
+					$width	= sanitize_text_field( stripslashes( $option_width[ $ii ] ) );
+					$preview	= sanitize_text_field( stripslashes( $option_preview[ $ii ] ) );
+                    $part	= sanitize_text_field( stripslashes( $option_part[ $ii ] ) );
 
 					$addon_options[] = array(
-						'label' => $label,
-						'price' => $price,
-						'min'	=> $min,
-						'max'	=> $max
+						'label'     => $label,
+						'price'     => $price,
+						'width'	    => $width,
+						'preview'	=> $preview,
+                        'part'	=> $part
 					);
 				}
 
@@ -297,46 +301,12 @@ class Product_Addon_Admin {
 				$data                = array();
 				$data['name']        = sanitize_text_field( stripslashes( $addon_name[ $i ] ) );
 				$data['description'] = wp_kses_post( stripslashes( $addon_description[ $i ] ) );
-				$data['type']        = sanitize_text_field( stripslashes( $addon_type[ $i ] ) );
 				$data['position']    = absint( $addon_position[ $i ] );
 				$data['options']     = $addon_options;
 				$data['required']    = isset( $addon_required[ $i ] ) ? 1 : 0;
 
 				// Add to array
 				$product_addons[] = apply_filters( 'woocommerce_product_addons_save_data', $data, $i );
-			}
-		}
-
-		if ( ! empty( $_POST['import_product_addon'] ) ) {
-			$import_addons = maybe_unserialize( maybe_unserialize( stripslashes( trim( $_POST['import_product_addon'] ) ) ) );
-
-			if ( is_array( $import_addons ) && sizeof( $import_addons ) > 0 ) {
-				$valid = true;
-
-				foreach ( $import_addons as $addon ) {
-					if ( ! isset( $addon['name'] ) || ! $addon['name'] ) {
-						$valid = false;
-					}
-					if ( ! isset( $addon['description'] ) ) {
-						$valid = false;
-					}
-					if ( ! isset( $addon['type'] ) ) {
-						$valid = false;
-					}
-					if ( ! isset( $addon['position'] ) ) {
-						$valid = false;
-					}
-					if ( ! isset( $addon['options'] ) ) {
-						$valid = false;
-					}
-					if ( ! isset( $addon['required'] ) ) {
-						$valid = false;
-					}
-				}
-
-				if ( $valid ) {
-					$product_addons = array_merge( $product_addons, $import_addons );
-				}
 			}
 		}
 

@@ -129,7 +129,7 @@ class Product_Addon_Cart {
 		}
 
 		if ( is_array( $product_addons ) && ! empty( $product_addons ) ) {
-			include_once( 'fields/abstract-class-product-addon-field.php' );
+			include_once( 'abstract-class-frame-field.php' );
 
 			foreach ( $product_addons as $addon ) {
 
@@ -141,32 +141,10 @@ class Product_Addon_Cart {
 					$value = stripslashes( $value );
 				}
 
-				switch ( $addon['type'] ) {
-					case 'checkbox' :
-					case 'radiobutton' :
-						include_once( 'fields/class-product-addon-field-list.php' );
-						$field = new Product_Addon_Field_List( $addon, $value );
-					break;
-					case 'custom' :
-					case 'custom_textarea' :
-					case 'custom_price' :
-					case 'custom_letters_only' :
-					case 'custom_digits_only' :
-					case 'custom_letters_or_digits' :
-					case 'custom_email' :
-					case 'input_multiplier' :
-						include_once( 'fields/class-product-addon-field-custom.php' );
-						$field = new Product_Addon_Field_Custom( $addon, $value );
-					break;
-					case 'select' :
-						include_once( 'fields/class-product-addon-field-select.php' );
-						$field = new Product_Addon_Field_Select( $addon, $value );
-					break;
-					case 'file_upload' :
-						include_once( 'fields/class-product-addon-field-file-upload.php' );
-						$field = new Product_Addon_Field_File_Upload( $addon, $value, $test );
-					break;
-				}
+				
+				include_once( 'class-frame-field-list.php' );
+				$field = new Product_Addon_Field_List( $addon, $value );
+				
 
 				$data = $field->get_cart_item_data();
 
@@ -203,7 +181,7 @@ class Product_Addon_Cart {
 		$product_addons = get_product_addons( $product_id );
 
 		if ( is_array( $product_addons ) && ! empty( $product_addons ) ) {
-			include_once( 'fields/abstract-class-product-addon-field.php' );
+			include_once( 'abstract-class-frame-field.php' );
 
 			foreach ( $product_addons as $addon ) {
 
@@ -215,32 +193,8 @@ class Product_Addon_Cart {
 					$value = stripslashes( $value );
 				}
 
-				switch ( $addon['type'] ) {
-					case "checkbox" :
-					case "radiobutton" :
-						include_once( 'fields/class-product-addon-field-list.php' );
-						$field = new Product_Addon_Field_List( $addon, $value );
-					break;
-					case "custom" :
-					case "custom_textarea" :
-					case "custom_price" :
-					case "custom_letters_only" :
-					case "custom_digits_only" :
-					case "custom_letters_or_digits" :
-					case "custom_email" :
-					case "input_multiplier" :
-						include_once( 'fields/class-product-addon-field-custom.php' );
-						$field = new Product_Addon_Field_Custom( $addon, $value );
-					break;
-					case "select" :
-						include_once( 'fields/class-product-addon-field-select.php' );
-						$field = new Product_Addon_Field_Select( $addon, $value );
-					break;
-					case "file_upload" :
-						include_once( 'fields/class-product-addon-field-file-upload.php' );
-						$field = new Product_Addon_Field_File_Upload( $addon, $value );
-					break;
-				}
+        		include_once( 'class-frame-field-list.php' );
+				$field = new Product_Addon_Field_List( $addon, $value );
 
 				$data = $field->validate();
 
@@ -294,105 +248,31 @@ class Product_Addon_Cart {
 		}
 
 		if ( is_array( $product_addons ) && ! empty( $product_addons ) ) {
-			include_once( 'fields/abstract-class-product-addon-field.php' );
+			include_once( 'abstract-class-frame-field.php' );
 
 			foreach ( $product_addons as $addon ) {
 				$value = '';
 				$field = '';
 
-				switch ( $addon['type'] ) {
-					case 'checkbox' :
-					case 'radiobutton' :
-						include_once( 'fields/class-product-addon-field-list.php' );
+    		include_once( 'class-frame-field-list.php' );
 
-						$value = array();
+	    		$value = array();
 
-						foreach ( $product['item_meta'] as $key => $meta ) {
-							if ( stripos( $key, $addon['name'] ) === 0 ) {
-								if ( 1 < count( $meta ) ) {
-									$value[] = array_map( 'sanitize_title', $meta );
-								} else {
-									$value[] = sanitize_title( $meta[0] );
-								}
-							}
+				foreach ( $product['item_meta'] as $key => $meta ) {
+					if ( stripos( $key, $addon['name'] ) === 0 ) {
+						if ( 1 < count( $meta ) ) {
+							$value[] = array_map( 'sanitize_title', $meta );
+						} else {
+							$value[] = sanitize_title( $meta[0] );
 						}
-
-						if ( empty( $value ) ) {
-							continue;
-						}
-
-						$field = new Product_Addon_Field_List( $addon, $value );
-					break;
-					case 'select' :
-						include_once( 'fields/class-product-addon-field-select.php' );
-
-						$value = '';
-
-						foreach ( $product['item_meta'] as $key => $meta ) {
-							if ( stripos( $key, $addon['name'] ) === 0 ) {
-								$value = sanitize_title( $meta[0] );
-							}
-						}
-
-						if ( empty( $value ) ) {
-							continue;
-						}
-
-						$chosen_option = '';
-						$loop          = 0;
-
-						foreach ( $addon['options'] as $option ) {
-							$loop++;
-							if ( sanitize_title( $option['label'] ) == $value ) {
-								$value = $value . '-' . $loop;
-								break;
-							}
-						}
-
-						$field = new Product_Addon_Field_Select( $addon, $value );
-					break;
-					case 'custom' :
-					case 'custom_textarea' :
-					case 'custom_price' :
-					case 'input_multiplier' :
-						include_once( 'fields/class-product-addon-field-custom.php' );
-
-						$value = array();
-
-						foreach ( $product['item_meta'] as $key => $meta ) {
-							foreach ( $addon['options'] as $option ) {
-								if ( stripos( $key, $addon['name'] ) === 0 && stristr( $key, $option['label'] ) ) {
-									$value[ sanitize_title( $option['label'] ) ] = $meta[0];
-								}
-							}
-						}
-
-						if ( empty( $value ) ) {
-							continue;
-						}
-
-						$field = new Product_Addon_Field_Custom( $addon, $value );
-					break;
-					case 'file_upload' :
-						include_once( 'fields/class-product-addon-field-file-upload.php' );
-
-						$value = array();
-
-						foreach ( $product['item_meta'] as $key => $meta ) {
-							foreach ( $addon['options'] as $option ) {
-								if ( stripos( $key, $addon['name'] ) === 0 && stristr( $key, $option['label'] ) ) {
-									$value[ sanitize_title( $option['label'] ) ] = $meta[0];
-								}
-							}
-						}
-
-						if ( empty( $value ) ) {
-							continue;
-						}
-
-						$field = new Product_Addon_Field_File_Upload( $addon, $value );
-					break;
+					}
 				}
+
+				if ( empty( $value ) ) {
+					continue;
+				}
+
+				$field = new Product_Addon_Field_List( $addon, $value );
 
 				// make sure a field is set (if not it could be product with no add-ons)
 				if ( $field ) {
