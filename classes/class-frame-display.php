@@ -125,7 +125,7 @@ class Product_Addon_Display {
 
 		$this->addon_scripts();
 
-		$product_addons = get_product_addons( $post_id, $prefix );
+		$product_addons = get_frames( $post_id, $prefix );
 
 		if ( is_array( $product_addons ) && sizeof( $product_addons ) > 0 ) {
 
@@ -229,7 +229,7 @@ class Product_Addon_Display {
 	 * @return void
 	 */
 	private function check_required_addons( $product_id ) {
-		$addons = get_product_addons( $product_id, false, false, true ); // No parent addons, but yes to global
+		$addons = get_frames( $product_id, false, false, true ); // No parent addons, but yes to global
 
 		if ( $addons && ! empty( $addons ) ) {
 			foreach ( $addons as $addon ) {

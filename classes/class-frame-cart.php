@@ -122,7 +122,7 @@ class Product_Addon_Cart {
 			$post_data = $_POST;
 		}
 
-		$product_addons = get_product_addons( $product_id );
+		$product_addons = get_frames( $product_id );
 
 		if ( empty( $cart_item_meta['addons'] ) ) {
 			$cart_item_meta['addons'] = array();
@@ -178,7 +178,7 @@ class Product_Addon_Cart {
 			$post_data = $_POST;
 		}
 
-		$product_addons = get_product_addons( $product_id );
+		$product_addons = get_frames( $product_id );
 
 		if ( is_array( $product_addons ) && ! empty( $product_addons ) ) {
 			include_once( 'abstract-class-frame-field.php' );
@@ -241,7 +241,7 @@ class Product_Addon_Cart {
 		remove_filter( 'woocommerce_add_to_cart_validation', array( $this, 'validate_add_cart_item' ), 10, 3 );
 
 		// Get addon data
-		$product_addons = get_product_addons( $product['product_id'] );
+		$product_addons = get_frames( $product['product_id'] );
 
 		if ( empty( $cart_item_meta['addons'] ) ) {
 			$cart_item_meta['addons'] = array();

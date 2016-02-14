@@ -90,7 +90,7 @@ if ( is_woocommerce_active() ) {
 	 * @param  bool $inc_global Set to false to not include global addons.
 	 * @return array array of addons
 	 */
-	function get_product_addons( $post_id, $prefix = false, $inc_parent = true, $inc_global = true ) {
+	function get_frames( $post_id, $prefix = false, $inc_parent = true, $inc_global = true ) {
 		if ( ! $post_id ) {
 			return array();
 		}
@@ -102,7 +102,7 @@ if ( is_woocommerce_active() ) {
 
 		// Product Parent Level Addons
 		if ( $inc_parent && $parent_id = wp_get_post_parent_id( $post_id ) ) {
-			$raw_addons[10]['parent'] = apply_filters( 'get_parent_product_addons_fields', get_product_addons( $parent_id, $parent_id . '-', false, false ), $post_id, $parent_id );
+			$raw_addons[10]['parent'] = apply_filters( 'get_parent_product_addons_fields', get_frames( $parent_id, $parent_id . '-', false, false ), $post_id, $parent_id );
 		}
 
 		// Product Level Addons
@@ -206,7 +206,7 @@ if ( is_woocommerce_active() ) {
 			}
 		}
 
-		return apply_filters( 'get_product_addons', $addons );
+		return apply_filters( 'get_frames', $addons );
 	}
 
 	/**
