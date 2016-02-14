@@ -19,7 +19,7 @@
 					'posts_per_page'  => -1,
 					'orderby'         => 'title',
 					'order'           => 'ASC',
-					'post_type'       => 'global_product_addon',
+					'post_type'       => 'global_frames',
 					'post_status'     => 'any',
 					'suppress_filters' => true
 				);

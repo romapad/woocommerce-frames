@@ -59,7 +59,7 @@ if ( is_woocommerce_active() ) {
 		 * Init post types used for addons
 		 */
 		public function init_post_types() {
-			register_post_type( "global_product_addon",
+			register_post_type( "global_frames",
 				array(
 					'public'              => false,
 					'show_ui'             => false,
@@ -75,7 +75,7 @@ if ( is_woocommerce_active() ) {
 				)
 			);
 
-			register_taxonomy_for_object_type( 'product_cat', 'global_product_addon' );
+			register_taxonomy_for_object_type( 'product_cat', 'global_frames' );
 		}
 	}
 
@@ -115,7 +115,7 @@ if ( is_woocommerce_active() ) {
 				'orderby'          => 'meta_value',
 				'order'            => 'ASC',
 				'meta_key'         => '_priority',
-				'post_type'        => 'global_product_addon',
+				'post_type'        => 'global_frames',
 				'post_status'      => 'publish',
 				'suppress_filters' => true,
 				'meta_query' => array(
@@ -142,7 +142,7 @@ if ( is_woocommerce_active() ) {
 					'orderby'          => 'meta_value',
 					'order'            => 'ASC',
 					'meta_key'         => '_priority',
-					'post_type'        => 'global_product_addon',
+					'post_type'        => 'global_frames',
 					'post_status'      => 'publish',
 					'suppress_filters' => true,
 					'tax_query'        => array(
