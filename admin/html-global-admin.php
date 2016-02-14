@@ -1,16 +1,16 @@
 <div class="wrap woocommerce">
 	<div class="icon32 icon32-posts-product" id="icon-woocommerce"><br/></div>
 
-    <h2><?php _e( 'Global Add-ons', 'woocommerce-product-addons' ) ?> <a href="<?php echo add_query_arg( 'add', true, admin_url( 'edit.php?post_type=product&page=global_addons' ) ); ?>" class="add-new-h2"><?php _e( 'Add Global Add-on', 'woocommerce-product-addons' ); ?></a></h2><br/>
+    <h2><?php _e( 'Global Add-ons', 'grmpd-frames' ) ?> <a href="<?php echo add_query_arg( 'add', true, admin_url( 'edit.php?post_type=product&page=global_addons' ) ); ?>" class="add-new-h2"><?php _e( 'Add Global Add-on', 'grmpd-frames' ); ?></a></h2><br/>
 
 	<table id="global-addons-table" class="wp-list-table widefat" cellspacing="0">
 		<thead>
 			<tr>
-				<th scope="col"><?php _e( 'Reference', 'woocommerce-product-addons' ); ?></th>
-				<th><?php _e( 'Number of Fields', 'woocommerce-product-addons' ); ?></th>
-				<th><?php _e( 'Priority', 'woocommerce-product-addons' ); ?></th>
-				<th><?php _e( 'Applies to...', 'woocommerce-product-addons' ); ?></th>
-				<th><?php _e( 'Actions', 'woocommerce-product-addons' ); ?></th>
+				<th scope="col"><?php _e( 'Reference', 'grmpd-frames' ); ?></th>
+				<th><?php _e( 'Number of Fields', 'grmpd-frames' ); ?></th>
+				<th><?php _e( 'Priority', 'grmpd-frames' ); ?></th>
+				<th><?php _e( 'Applies to...', 'grmpd-frames' ); ?></th>
+				<th><?php _e( 'Actions', 'grmpd-frames' ); ?></th>
 			</tr>
 		</thead>
 		<tbody id="the-list">
@@ -43,7 +43,7 @@
 							<td><?php
 
 								if ( in_array( 0, $objects ) ) {
-									_e( 'All Products', 'woocommerce-product-addons' );
+									_e( 'All Products', 'grmpd-frames' );
 								} else {
 									$term_names = array();
 									foreach ( $objects as $object_id ) {
@@ -60,7 +60,7 @@
 
 							?></td>
 							<td>
-								<a href="<?php echo add_query_arg( 'edit', $global_addon->ID, admin_url( 'edit.php?post_type=product&page=global_addons' ) ); ?>" class="button"><?php _e( 'Edit', 'woocommerce-product-addons' ); ?></a> <a href="<?php echo wp_nonce_url( add_query_arg( 'delete', $global_addon->ID, admin_url( 'edit.php?post_type=product&page=global_addons' ) ), 'delete_addon' ); ?>" class="button"><?php _e( 'Delete', 'woocommerce-product-addons' ); ?></a>
+								<a href="<?php echo add_query_arg( 'edit', $global_addon->ID, admin_url( 'edit.php?post_type=product&page=global_addons' ) ); ?>" class="button"><?php _e( 'Edit', 'grmpd-frames' ); ?></a> <a href="<?php echo wp_nonce_url( add_query_arg( 'delete', $global_addon->ID, admin_url( 'edit.php?post_type=product&page=global_addons' ) ), 'delete_addon' ); ?>" class="button"><?php _e( 'Delete', 'grmpd-frames' ); ?></a>
 							</td>
 						</tr>
 						<?php
@@ -68,7 +68,7 @@
 				} else {
 					?>
 					<tr>
-						<td colspan="5"><?php _e( 'No global add-ons exists yet.', 'woocommerce-product-addons' ); ?> <a href="<?php echo add_query_arg( 'add', true, admin_url( 'edit.php?post_type=product&page=global_addons' ) ); ?>"><?php _e( 'Add one?', 'woocommerce-product-addons' ); ?></a></td>
+						<td colspan="5"><?php _e( 'No global add-ons exists yet.', 'grmpd-frames' ); ?> <a href="<?php echo add_query_arg( 'add', true, admin_url( 'edit.php?post_type=product&page=global_addons' ) ); ?>"><?php _e( 'Add one?', 'grmpd-frames' ); ?></a></td>
 					</tr>
 					<?php
 				}

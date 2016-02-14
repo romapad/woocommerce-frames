@@ -2,7 +2,7 @@
 	<?php do_action( 'woocommerce-product-addons_panel_start' ); ?>
 
 	<p class="toolbar">
-		<a href="#" class="close_all"><?php _e( 'Close all', 'woocommerce-product-addons' ); ?></a> / <a href="#" class="expand_all"><?php _e( 'Expand all', 'woocommerce-product-addons' ); ?></a>
+		<a href="#" class="close_all"><?php _e( 'Close all', 'grmpd-frames' ); ?></a> / <a href="#" class="expand_all"><?php _e( 'Expand all', 'grmpd-frames' ); ?></a>
 	</p>
 
 	<div class="woocommerce_product_addons wc-metaboxes">
@@ -20,13 +20,13 @@
 	</div>
 
 	<div class="toolbar">
-		<button type="button" class="button add_new_addon button-primary"><?php _e( 'New Addon Group', 'woocommerce-product-addons' ); ?></button>
+		<button type="button" class="button add_new_addon button-primary"><?php _e( 'New Addon Group', 'grmpd-frames' ); ?></button>
 	</div>
 	<?php if( isset($post->ID) ):?>
     <div class="options_group">
 		<p class="form-field">
-        <label for="_product_addons_exclude_global"><?php _e( 'Global Addon Exclusion', 'woocommerce-product-addons' ); ?></label>
-        <input id="_product_addons_exclude_global" name="_product_addons_exclude_global" class="checkbox" type="checkbox" value="1" <?php checked( get_post_meta( $post->ID, '_product_addons_exclude_global', TRUE ), 1 ); ?>/><span class="description"><?php _e( 'Check this to exclude this product from all Global Addons', 'woocommerce-product-addons' ); ?></span>
+        <label for="_product_addons_exclude_global"><?php _e( 'Global Addon Exclusion', 'grmpd-frames' ); ?></label>
+        <input id="_product_addons_exclude_global" name="_product_addons_exclude_global" class="checkbox" type="checkbox" value="1" <?php checked( get_post_meta( $post->ID, '_product_addons_exclude_global', TRUE ), 1 ); ?>/><span class="description"><?php _e( 'Check this to exclude this product from all Global Addons', 'grmpd-frames' ); ?></span>
 		</p>
 	</div>
 	<?php endif; ?>
@@ -104,7 +104,7 @@
 		})
 		.on( 'click', '.remove_addon', function() {
 
-			var answer = confirm('<?php _e('Are you sure you want remove this add-on?', 'woocommerce-product-addons'); ?>');
+			var answer = confirm('<?php _e('Are you sure you want remove this add-on?', 'grmpd-frames'); ?>');
 
 			if (answer) {
 				var addon = jQuery(this).closest('.woocommerce_product_addon');
@@ -161,7 +161,7 @@
 		// Remove option
 		jQuery('button.remove_addon_option').live('click', function(){
 
-			var answer = confirm('<?php _e('Are you sure you want delete this option?', 'woocommerce-product-addons'); ?>');
+			var answer = confirm('<?php _e('Are you sure you want delete this option?', 'grmpd-frames'); ?>');
 
 			if (answer) {
 				var addOn = jQuery(this).closest('.woocommerce_product_addon');

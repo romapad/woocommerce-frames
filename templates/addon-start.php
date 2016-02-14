@@ -3,7 +3,7 @@
 	<?php do_action( 'wc_product_addon_start', $addon ); ?>
 
 	<?php if ( $name ) : ?>
-		<h3 class="addon-name"><?php echo wptexturize( $name ); ?> <?php if ( 1 == $required ) echo '<abbr class="required" title="' . __( 'Required field', 'woocommerce-product-addons' ) . '">*</abbr>'; ?></h3>
+		<h3 class="addon-name"><?php echo wptexturize( $name ); ?> <?php if ( 1 == $required ) echo '<abbr class="required" title="' . __( 'Required field', 'grmpd-frames' ) . '">*</abbr>'; ?></h3>
 	<?php endif; ?>
 
 	<?php if ( $description ) : ?>

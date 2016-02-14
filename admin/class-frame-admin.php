@@ -26,7 +26,7 @@ class Product_Addon_Admin {
 	 * Add menus
 	 */
 	public function admin_menu() {
-		$page = add_submenu_page( 'edit.php?post_type=product', __( 'Global Add-ons', 'woocommerce-product-addons' ), __( 'Global Add-ons', 'woocommerce-product-addons' ), 'manage_woocommerce', 'global_addons', array( $this, 'global_addons_admin' ) );
+		$page = add_submenu_page( 'edit.php?post_type=product', __( 'Global Add-ons', 'grmpd-frames' ), __( 'Global Add-ons', 'grmpd-frames' ), 'manage_woocommerce', 'global_addons', array( $this, 'global_addons_admin' ) );
 
 		add_action( 'admin_print_styles-'. $page, array( &$this, 'admin_enqueue' ) );
 	}
@@ -72,7 +72,7 @@ class Product_Addon_Admin {
 			if ( $_POST ) {
 
 				if ( $edit_id = $this->save_global_addons() ) {
-					echo '<div class="updated"><p>' . __( 'Add-on saved successfully', 'woocommerce-product-addons' ) . '</p></div>';
+					echo '<div class="updated"><p>' . __( 'Add-on saved successfully', 'grmpd-frames' ) . '</p></div>';
 				}
 
 				$reference      = woocommerce_clean( $_POST['addon-reference'] );
@@ -87,7 +87,7 @@ class Product_Addon_Admin {
 				$global_addon = get_post( $edit_id );
 
 				if ( ! $global_addon ) {
-					echo '<div class="error">' . __( 'Error: Global Add-on not found', 'woocommerce-product-addons' ) . '</div>';
+					echo '<div class="error">' . __( 'Error: Global Add-on not found', 'grmpd-frames' ) . '</div>';
 					return;
 				}
 
@@ -127,7 +127,7 @@ class Product_Addon_Admin {
 
 			if ( ! empty( $_GET['delete'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'delete_addon' ) ) {
 				wp_delete_post( absint( $_GET['delete'] ), true );
-				echo '<div class="updated"><p>' . __( 'Add-on deleted successfully', 'woocommerce-product-addons' ) . '</p></div>';
+				echo '<div class="updated"><p>' . __( 'Add-on deleted successfully', 'grmpd-frames' ) . '</p></div>';
 			}
 
 			include( 'html-global-admin.php' );
@@ -140,7 +140,7 @@ class Product_Addon_Admin {
 	 * @return void
 	 */
 	public function tab() {
-		?><li class="addons_tab product_addons"><a href="#product_addons_data"><?php _e( 'Add-ons', 'woocommerce-product-addons' ); ?></a></li><?php
+		?><li class="addons_tab product_addons"><a href="#product_addons_data"><?php _e( 'Add-ons', 'grmpd-frames' ); ?></a></li><?php
 	}
 
 	/**

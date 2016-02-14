@@ -12,7 +12,7 @@ class Product_Addon_Field_List extends Product_Addon_Field {
 	public function validate() {
 		if ( ! empty( $this->addon['required'] ) ) {
 			if ( ! $this->value || sizeof( $this->value ) == 0 ) {
-				return new WP_Error( 'error', sprintf( __( '"%s" is a required field.', 'woocommerce-product-addons' ), $this->addon['name'] ) );
+				return new WP_Error( 'error', sprintf( __( '"%s" is a required field.', 'grmpd-frames' ), $this->addon['name'] ) );
 			}
 		}
 

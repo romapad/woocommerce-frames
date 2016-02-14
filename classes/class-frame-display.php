@@ -66,9 +66,9 @@ class Product_Addon_Display {
 		$params = array(
 			'price_display_suffix'         => esc_attr( get_option( 'woocommerce_price_display_suffix' ) ),
 			'ajax_url'                     => WC()->ajax_url(),
-			'i18n_addon_total'             => __( 'Options total:', 'woocommerce-product-addons' ),
-			'i18n_grand_total'             => __( 'Grand total:', 'woocommerce-product-addons' ),
-			'i18n_remaining'               => __( 'characters remaining', 'woocommerce-product-addons' ),
+			'i18n_addon_total'             => __( 'Options total:', 'grmpd-frames' ),
+			'i18n_grand_total'             => __( 'Grand total:', 'grmpd-frames' ),
+			'i18n_remaining'               => __( 'characters remaining', 'grmpd-frames' ),
 			'currency_format_num_decimals' => absint( get_option( 'woocommerce_price_num_decimals' ) ),
 			'currency_format_symbol'       => get_woocommerce_currency_symbol(),
 			'currency_format_decimal_sep'  => esc_attr( stripslashes( get_option( 'woocommerce_price_decimal_sep' ) ) ),
@@ -141,13 +141,13 @@ class Product_Addon_Display {
 						'required'    => $addon['required'],
 						'name'        => $addon['name'],
 						'description' => $addon['description'],
-					), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
+					), 'grmpd-frames', $this->plugin_path() . '/templates/' );
 
 				echo $this->get_addon_html( $addon );
 
 				woocommerce_get_template( 'addon-end.php', array(
 						'addon'    => $addon,
-					), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
+					), 'grmpd-frames', $this->plugin_path() . '/templates/' );
 			}
 
 			do_action( 'woocommerce-product-addons_end', $post_id );
@@ -218,7 +218,7 @@ class Product_Addon_Display {
 	public function get_checkbox_html( $addon ) {
 		woocommerce_get_template( 'frontend.php', array(
 				'addon' => $addon,
-			), 'woocommerce-product-addons', $this->plugin_path() . '/templates/' );
+			), 'grmpd-frames', $this->plugin_path() . '/templates/' );
 	}
 
 	/**
@@ -257,7 +257,7 @@ class Product_Addon_Display {
 				if ( version_compare( WOOCOMMERCE_VERSION, '2.5.0', '<' ) ) {
 					$product->product_type = 'addons';
 				}
-				$text = apply_filters( 'addons_add_to_cart_text', __( 'Select options', 'woocommerce-product-addons' ) );
+				$text = apply_filters( 'addons_add_to_cart_text', __( 'Select options', 'grmpd-frames' ) );
 			}
 		}
 

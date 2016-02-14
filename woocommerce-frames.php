@@ -52,7 +52,7 @@ if ( is_woocommerce_active() ) {
 		 * Localisation
 		 */
 		public function load_plugin_textdomain() {
-			load_plugin_textdomain( 'woocommerce-product-addons', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+			load_plugin_textdomain( 'grmpd-frames', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		}
 
 		/**
