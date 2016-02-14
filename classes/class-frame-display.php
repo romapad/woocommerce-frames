@@ -4,9 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Product_Addon_Display class.
+ * Grmpd_Frame_Display class.
  */
-class Product_Addon_Display {
+class Grmpd_Frame_Display {
 
 	/**
 	 * __construct function.
@@ -22,7 +22,7 @@ class Product_Addon_Display {
 
 		// Addon display
 		add_action( 'woocommerce_before_add_to_cart_button', array( $this, 'display' ), 10 );
-		add_action( 'woocommerce-product-addons_end', array( $this, 'totals' ), 10 );
+		add_action( 'grmpd-frames_end', array( $this, 'totals' ), 10 );
 
 		// Change buttons/cart urls
 		add_filter( 'add_to_cart_text', array( $this, 'add_to_cart_text'), 15 );
@@ -98,7 +98,7 @@ class Product_Addon_Display {
 			$params['currency_format'] = esc_attr( str_replace( array( '%1$s', '%2$s' ), array( '%s', '%v' ), get_woocommerce_price_format() ) );
 		}
 
-		wp_localize_script( 'woocommerce-addons', 'woocommerce_addons_params', $params );
+		wp_localize_script( 'woocommerce-addons', 'grmpd_frames_params', $params );
 	}
 
 	public function quick_view_single_compat() {
@@ -125,13 +125,13 @@ class Product_Addon_Display {
 
 		$this->addon_scripts();
 
-		$product_addons = get_frames( $post_id, $prefix );
+		$frames = get_frames( $post_id, $prefix );
 
-		if ( is_array( $product_addons ) && sizeof( $product_addons ) > 0 ) {
+		if ( is_array( $frames ) && sizeof( $frames ) > 0 ) {
 
-			do_action( 'woocommerce-product-addons_start', $post_id );
+			do_action( 'grmpd-frames_start', $post_id );
 
-			foreach ( $product_addons as $addon ) {
+			foreach ( $frames as $addon ) {
 
 				if ( ! isset( $addon['field-name'] ) )
 					continue;
@@ -150,7 +150,7 @@ class Product_Addon_Display {
 					), 'grmpd-frames', $this->plugin_path() . '/templates/' );
 			}
 
-			do_action( 'woocommerce-product-addons_end', $post_id );
+			do_action( 'grmpd-frames_end', $post_id );
 		}
 	}
 
@@ -185,7 +185,7 @@ class Product_Addon_Display {
 			$raw_price = $the_product->get_price_including_tax();
 		}
 
-		echo '<div id="product-addons-total" data-show-grand-total="' . ( apply_filters( 'woocommerce_product_addons_show_grand_total', true, $the_product ) ? 1 : 0 ) . '" data-type="' . esc_attr( $the_product->product_type ) . '" data-tax-mode="' . esc_attr( $tax_mode ) . '" data-tax-display-mode="' . esc_attr( $tax_display_mode ) . '" data-price="' . esc_attr( $display_price )  . '" data-raw-price="' . esc_attr( $raw_price ) . '" data-product-id="' . esc_attr( $post_id ) . '"></div>';
+		echo '<div id="grmpd-frames-total" data-show-grand-total="' . ( apply_filters( 'woocommerce_frames_show_grand_total', true, $the_product ) ? 1 : 0 ) . '" data-type="' . esc_attr( $the_product->product_type ) . '" data-tax-mode="' . esc_attr( $tax_mode ) . '" data-tax-display-mode="' . esc_attr( $tax_display_mode ) . '" data-price="' . esc_attr( $display_price )  . '" data-raw-price="' . esc_attr( $raw_price ) . '" data-product-id="' . esc_attr( $post_id ) . '"></div>';
 	}
 
 	/**
@@ -198,13 +198,13 @@ class Product_Addon_Display {
 	public function get_addon_html( $addon ) {
 		ob_start();
 
-		$method_name   = 'get_checkbox_html';
+		$method_name   = 'get_frontend_html';
 
 		if ( method_exists( $this, $method_name ) ) {
 			$this->$method_name( $addon );
 		}
 
-		do_action( 'woocommerce-product-addons_get_checkbox_html', $addon );
+		do_action( 'grmpd-frames_get_frontend_html', $addon );
 
 		return ob_get_clean();
 	}
@@ -215,7 +215,7 @@ class Product_Addon_Display {
 	 * @access public
 	 * @return void
 	 */
-	public function get_checkbox_html( $addon ) {
+	public function get_frontend_html( $addon ) {
 		woocommerce_get_template( 'frontend.php', array(
 				'addon' => $addon,
 			), 'grmpd-frames', $this->plugin_path() . '/templates/' );
@@ -292,7 +292,7 @@ class Product_Addon_Display {
 	public function add_to_cart_url( $url ) {
 		global $product;
 
-		if ( ! is_single( $product->id ) && in_array( $product->product_type, apply_filters( 'woocommerce_product_addons_add_to_cart_product_types', array( 'subscription', 'simple' ) ) ) && ( ! isset( $_GET['wc-api'] ) || $_GET['wc-api'] !== 'WC_Quick_View' ) ) {
+		if ( ! is_single( $product->id ) && in_array( $product->product_type, apply_filters( 'woocommerce_frames_add_to_cart_product_types', array( 'subscription', 'simple' ) ) ) && ( ! isset( $_GET['wc-api'] ) || $_GET['wc-api'] !== 'WC_Quick_View' ) ) {
 			if ( $this->check_required_addons( $product->id ) ) {
 				if ( version_compare( WOOCOMMERCE_VERSION, '2.5.0', '<' ) ) {
 					$product->product_type = 'addons';
@@ -319,4 +319,4 @@ class Product_Addon_Display {
 
 }
 
-$GLOBALS['Product_Addon_Display'] = new Product_Addon_Display();
+$GLOBALS['Grmpd_Frame_Display'] = new Grmpd_Frame_Display();

@@ -1,4 +1,4 @@
-	<?php do_action( 'wc_product_addon_end', $addon ); ?>
+	<?php do_action( 'wc_grmpd_frame_end', $addon ); ?>
 
 	<div class="clear"></div>
 </div>

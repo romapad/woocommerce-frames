@@ -1,17 +1,17 @@
 <div class="wrap woocommerce">
 	<div class="icon32 icon32-posts-product" id="icon-woocommerce"><br/></div>
 
-    <h2><?php _e( 'Add/Edit Global Add-on', 'grmpd-frames' ) ?></h2><br/>
+    <h2><?php _e( 'Add/Edit Frames', 'grmpd-frames' ) ?></h2><br/>
 
 	<form method="POST" action="">
-		<table class="form-table global-addons-form meta-box-sortables">
+		<table class="form-table frames-form meta-box-sortables">
 			<tr>
 				<th>
-					<label for="addon-reference"><?php _e( 'Global Add-on Reference', 'grmpd-frames' ); ?></label>
+					<label for="addon-reference"><?php _e( 'Frames Reference', 'grmpd-frames' ); ?></label>
 				</th>
 				<td>
 					<input type="text" name="addon-reference" id="addon-reference" style="width:50%;" value="<?php echo esc_attr( $reference ); ?>" />
-					<p class="description"><?php _e( 'Give this global add-on a reference/name to make it recognisable.', 'grmpd-frames' ); ?></p>
+					<p class="description"><?php _e( 'Give this frames a reference/name to make it recognisable.', 'grmpd-frames' ); ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -20,7 +20,7 @@
 				</th>
 				<td>
 					<input type="text" name="addon-priority" id="addon-priority" style="width:50%;" value="<?php echo esc_attr( $priority ); ?>" />
-					<p class="description"><?php _e( 'Give this global addon a priority - this will deternmine the order in which multiple groups of addons get displayed on the frontend. Per-product add-ons will always have priority 10.', 'grmpd-frames' ); ?></p>
+					<p class="description"><?php _e( 'Give this frames a priority - this will deternmine the order in which multiple groups of frames get displayed on the frontend. Per-product frames will always have priority 10.', 'grmpd-frames' ); ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -39,14 +39,14 @@
 								}
 							?>
 						</optgroup>
-						<?php do_action( 'woocommerce_product_addons_global_edit_objects', $objects ); ?>
+						<?php do_action( 'woocommerce_frames_global_edit_objects', $objects ); ?>
 					</select>
-					<p class="description"><?php _e( 'Choose categories which should show these addons (or apply to all products).', 'grmpd-frames' ); ?></p>
+					<p class="description"><?php _e( 'Choose categories which should show these frames (or apply to all products).', 'grmpd-frames' ); ?></p>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<label for="addon-objects"><?php _e( 'Add-ons', 'grmpd-frames' ); ?></label>
+					<label for="addon-objects"><?php _e( 'Frames', 'grmpd-frames' ); ?></label>
 				</th>
 				<td id="poststuff" class="postbox">
 					<?php include( 'html-addon-panel.php' ); ?>
@@ -55,7 +55,7 @@
 		</table>
 		<p class="submit">
 			<input type="hidden" name="edit_id" value="<?php if ( ! empty( $edit_id ) ) echo $edit_id; ?>" />
-			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Save Global Add-on', 'grmpd-frames' ); ?>">
+			<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php _e( 'Save Frames', 'grmpd-frames' ); ?>">
 		</p>
 	</form>
 </div>
@@ -64,7 +64,7 @@
 	function openclose() {
 		jQuery('.wc-metabox').toggleClass( 'closed' ).toggleClass( 'open' );
 	}
-	// Open and close the Product Add-On metaboxes
+	// Open and close the Frames metaboxes
 	jQuery('.wc-metaboxes-wrapper').on('click', '.wc-metabox h3', function(event){
 		// If the user clicks on some form input inside the h3, like a select list (for variations), the box should not be toggled
 		if (jQuery(event.target).filter(':input, option').length) return;

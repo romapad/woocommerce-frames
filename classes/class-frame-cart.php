@@ -4,9 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Product_Addon_cart class.
+ * Grmpd_Frame_cart class.
  */
-class Product_Addon_Cart {
+class Grmpd_Frame_Cart {
 
 	/**
 	 * Constructor
@@ -50,7 +50,7 @@ class Product_Addon_Cart {
 	 */
 	public function add_cart_item( $cart_item ) {
 		// Adjust price if addons are set
-		if ( ! empty( $cart_item['addons'] ) && apply_filters( 'woocommerce_product_addons_adjust_price', true, $cart_item ) ) {
+		if ( ! empty( $cart_item['addons'] ) && apply_filters( 'woocommerce_frames_adjust_price', true, $cart_item ) ) {
 
 			$extra_cost = 0;
 
@@ -96,7 +96,7 @@ class Product_Addon_Cart {
 				$name = $addon['name'];
 
 				if ( $addon['price'] > 0 && apply_filters( 'woocommerce_addons_add_price_to_name', '__return_true' ) ) {
-					$name .= ' (' . wc_price( get_product_addon_price_for_display ( $addon['price'], $cart_item[ 'data' ], true ) ) . ')';
+					$name .= ' (' . wc_price( get_frame_price_for_display ( $addon['price'], $cart_item[ 'data' ], true ) ) . ')';
 				}
 
 				$other_data[] = array(
@@ -122,16 +122,16 @@ class Product_Addon_Cart {
 			$post_data = $_POST;
 		}
 
-		$product_addons = get_frames( $product_id );
+		$frames = get_frames( $product_id );
 
 		if ( empty( $cart_item_meta['addons'] ) ) {
 			$cart_item_meta['addons'] = array();
 		}
 
-		if ( is_array( $product_addons ) && ! empty( $product_addons ) ) {
+		if ( is_array( $frames ) && ! empty( $frames ) ) {
 			include_once( 'abstract-class-frame-field.php' );
 
-			foreach ( $product_addons as $addon ) {
+			foreach ( $frames as $addon ) {
 
 				$value = isset( $post_data[ 'addon-' . $addon['field-name'] ] ) ? $post_data[ 'addon-' . $addon['field-name'] ] : '';
 
@@ -143,7 +143,7 @@ class Product_Addon_Cart {
 
 				
 				include_once( 'class-frame-field-list.php' );
-				$field = new Product_Addon_Field_List( $addon, $value );
+				$field = new Grmpd_Frame_Field_List( $addon, $value );
 				
 
 				$data = $field->get_cart_item_data();
@@ -156,7 +156,7 @@ class Product_Addon_Cart {
 						throw new Exception( $data->get_error_message() );
 					}
 				} elseif ( $data ) {
-					$cart_item_meta['addons'] = array_merge( $cart_item_meta['addons'], apply_filters( 'woocommerce_product_addon_cart_item_data', $data, $addon, $product_id, $post_data ) );
+					$cart_item_meta['addons'] = array_merge( $cart_item_meta['addons'], apply_filters( 'grmpd_frame_cart_item_data', $data, $addon, $product_id, $post_data ) );
 				}
 			}
 		}
@@ -178,12 +178,12 @@ class Product_Addon_Cart {
 			$post_data = $_POST;
 		}
 
-		$product_addons = get_frames( $product_id );
+		$frames = get_frames( $product_id );
 
-		if ( is_array( $product_addons ) && ! empty( $product_addons ) ) {
+		if ( is_array( $frames ) && ! empty( $frames ) ) {
 			include_once( 'abstract-class-frame-field.php' );
 
-			foreach ( $product_addons as $addon ) {
+			foreach ( $frames as $addon ) {
 
 				$value = isset( $post_data[ 'addon-' . $addon['field-name'] ] ) ? $post_data[ 'addon-' . $addon['field-name'] ] : '';
 
@@ -194,7 +194,7 @@ class Product_Addon_Cart {
 				}
 
         		include_once( 'class-frame-field-list.php' );
-				$field = new Product_Addon_Field_List( $addon, $value );
+				$field = new Grmpd_Frame_Field_List( $addon, $value );
 
 				$data = $field->validate();
 
@@ -225,7 +225,7 @@ class Product_Addon_Cart {
 				$name = $addon['name'];
 
 				if ( $addon['price'] > 0 && apply_filters( 'woocommerce_addons_add_price_to_name', true ) ) {
-					$name .= ' (' . strip_tags( wc_price( get_product_addon_price_for_display ( $addon['price'], $values[ 'data' ], true ) ) ) . ')';
+					$name .= ' (' . strip_tags( wc_price( get_frame_price_for_display ( $addon['price'], $values[ 'data' ], true ) ) ) . ')';
 				}
 
 				woocommerce_add_order_item_meta( $item_id, $name, $addon['value'] );
@@ -241,16 +241,16 @@ class Product_Addon_Cart {
 		remove_filter( 'woocommerce_add_to_cart_validation', array( $this, 'validate_add_cart_item' ), 10, 3 );
 
 		// Get addon data
-		$product_addons = get_frames( $product['product_id'] );
+		$frames = get_frames( $product['product_id'] );
 
 		if ( empty( $cart_item_meta['addons'] ) ) {
 			$cart_item_meta['addons'] = array();
 		}
 
-		if ( is_array( $product_addons ) && ! empty( $product_addons ) ) {
+		if ( is_array( $frames ) && ! empty( $frames ) ) {
 			include_once( 'abstract-class-frame-field.php' );
 
-			foreach ( $product_addons as $addon ) {
+			foreach ( $frames as $addon ) {
 				$value = '';
 				$field = '';
 
@@ -272,7 +272,7 @@ class Product_Addon_Cart {
 					continue;
 				}
 
-				$field = new Product_Addon_Field_List( $addon, $value );
+				$field = new Grmpd_Frame_Field_List( $addon, $value );
 
 				// make sure a field is set (if not it could be product with no add-ons)
 				if ( $field ) {
@@ -285,7 +285,7 @@ class Product_Addon_Cart {
 						// get the post data
 						$post_data = $_POST;
 
-						$cart_item_meta['addons'] = array_merge( $cart_item_meta['addons'], apply_filters( 'woocommerce_product_addon_reorder_cart_item_data', $data, $addon, $product['product_id'], $post_data ) );
+						$cart_item_meta['addons'] = array_merge( $cart_item_meta['addons'], apply_filters( 'grmpd_frame_reorder_cart_item_data', $data, $addon, $product['product_id'], $post_data ) );
 					}
 				}
 			}
@@ -295,4 +295,4 @@ class Product_Addon_Cart {
 	}
 }
 
-$GLOBALS['Product_Addon_Cart'] = new Product_Addon_Cart();
+$GLOBALS['Grmpd_Frame_Cart'] = new Grmpd_Frame_Cart();

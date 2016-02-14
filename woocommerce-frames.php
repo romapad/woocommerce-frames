@@ -86,7 +86,7 @@ if ( is_woocommerce_active() ) {
 	 *
 	 * @param  int $post_id ID of the product to get addons for
 	 * @param  string $prefix for addon field names. Defaults to postid-
-	 * @param  bool $inc_parent Set to false to not include parent product addons.
+	 * @param  bool $inc_parent Set to false to not include parent frames.
 	 * @param  bool $inc_global Set to false to not include global addons.
 	 * @return array array of addons
 	 */
@@ -97,16 +97,16 @@ if ( is_woocommerce_active() ) {
 
 		$addons        = array();
 		$raw_addons    = array();
-		$product_terms = apply_filters( 'get_product_addons_product_terms', wp_get_post_terms( $post_id, 'product_cat', array( 'fields' => 'ids' ) ), $post_id );
-		$exclude       = get_post_meta( $post_id, '_product_addons_exclude_global', true );
+		$product_terms = apply_filters( 'get_frames_product_terms', wp_get_post_terms( $post_id, 'product_cat', array( 'fields' => 'ids' ) ), $post_id );
+		$exclude       = get_post_meta( $post_id, '_frames_exclude_global', true );
 
 		// Product Parent Level Addons
 		if ( $inc_parent && $parent_id = wp_get_post_parent_id( $post_id ) ) {
-			$raw_addons[10]['parent'] = apply_filters( 'get_parent_product_addons_fields', get_frames( $parent_id, $parent_id . '-', false, false ), $post_id, $parent_id );
+			$raw_addons[10]['parent'] = apply_filters( 'get_parent_frames_fields', get_frames( $parent_id, $parent_id . '-', false, false ), $post_id, $parent_id );
 		}
 
 		// Product Level Addons
-		$raw_addons[10]['product'] = apply_filters( 'get_product_addons_fields', array_filter( (array) get_post_meta( $post_id, '_product_addons', true ) ), $post_id );
+		$raw_addons[10]['product'] = apply_filters( 'get_frames_fields', array_filter( (array) get_post_meta( $post_id, '_frames', true ) ), $post_id );
 
 		// Global level addons (all products)
 		if ( '1' !== $exclude && $inc_global ) {
@@ -126,18 +126,18 @@ if ( is_woocommerce_active() ) {
 				)
 			);
 
-			$global_addons = get_posts( $args );
+			$grmpd_frames = get_posts( $args );
 
-			if ( $global_addons ) {
-				foreach ( $global_addons as $global_addon ) {
+			if ( $grmpd_frames ) {
+				foreach ( $grmpd_frames as $global_addon ) {
 					$priority                                     = get_post_meta( $global_addon->ID, '_priority', true );
-					$raw_addons[ $priority ][ $global_addon->ID ] = apply_filters( 'get_product_addons_fields', array_filter( (array) get_post_meta( $global_addon->ID, '_product_addons', true ) ), $global_addon->ID );
+					$raw_addons[ $priority ][ $global_addon->ID ] = apply_filters( 'get_frames_fields', array_filter( (array) get_post_meta( $global_addon->ID, '_frames', true ) ), $global_addon->ID );
 				}
 			}
 
 			// Global level addons (categories)
 			if ( $product_terms ) {
-				$args = apply_filters( 'get_product_addons_global_query_args', array(
+				$args = apply_filters( 'get_frames_global_query_args', array(
 					'posts_per_page'   => -1,
 					'orderby'          => 'meta_value',
 					'order'            => 'ASC',
@@ -155,12 +155,12 @@ if ( is_woocommerce_active() ) {
 					)
 				), $product_terms );
 
-				$global_addons = get_posts( $args );
+				$grmpd_frames = get_posts( $args );
 
-				if ( $global_addons ) {
-					foreach ( $global_addons as $global_addon ) {
+				if ( $grmpd_frames ) {
+					foreach ( $grmpd_frames as $global_addon ) {
 						$priority                                     = get_post_meta( $global_addon->ID, '_priority', true );
-						$raw_addons[ $priority ][ $global_addon->ID ] = apply_filters( 'get_product_addons_fields', array_filter( (array) get_post_meta( $global_addon->ID, '_product_addons', true ) ), $global_addon->ID );
+						$raw_addons[ $priority ][ $global_addon->ID ] = apply_filters( 'get_frames_fields', array_filter( (array) get_post_meta( $global_addon->ID, '_frames', true ) ), $global_addon->ID );
 					}
 				}
 			}
@@ -179,13 +179,13 @@ if ( is_woocommerce_active() ) {
 
 		// Generate field names with unqiue prefixes
 		if ( ! $prefix ) {
-			$prefix = apply_filters( 'product_addons_field_prefix', "{$post_id}-", $post_id );
+			$prefix = apply_filters( 'frames_field_prefix', "{$post_id}-", $post_id );
 		}
 
 		// Let's avoid exceeding the suhosin default input element name limit of 64 characters
 		$max_addon_name_length = 45 - strlen( $prefix );
 
-		// if the product_addons_field_prefix filter results in a very long prefix, then
+		// if the frames_field_prefix filter results in a very long prefix, then
 		// go ahead and enforce sanity, exceed the default suhosin limit, and just use
 		// the prefix and the field counter for the input element name
 		if ( $max_addon_name_length < 0 ) {
@@ -216,7 +216,7 @@ if ( is_woocommerce_active() ) {
 	 *
 	 * @return float
 	 */
-	function get_product_addon_price_for_display( $price ) {
+	function get_frame_price_for_display( $price ) {
 		global $product;
 
 		if ( $price === '' || $price == '0' ) {

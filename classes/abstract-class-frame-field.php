@@ -1,8 +1,8 @@
 <?php
 /**
- * Product_Addon_Field
+ * Grmpd_Frame_Field
  */
-abstract class Product_Addon_Field {
+abstract class Grmpd_Frame_Field {
 	public $addon;
 	public $value;
 

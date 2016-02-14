@@ -6,14 +6,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Addons Ajax
  */
-class WC_Addons_Ajax {
+class WC_Frames_Ajax {
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'wp_ajax_wc_product_addons_calculate_tax', array( $this, 'calculate_tax' ) );
-		add_action( 'wp_ajax_nopriv_wc_product_addons_calculate_tax', array( $this, 'calculate_tax' ) );
+		add_action( 'wp_ajax_wc_frames_calculate_tax', array( $this, 'calculate_tax' ) );
+		add_action( 'wp_ajax_nopriv_wc_frames_calculate_tax', array( $this, 'calculate_tax' ) );
 	}
 
 	/**
@@ -63,4 +63,4 @@ class WC_Addons_Ajax {
 
 }
 
-new WC_Addons_Ajax();
+new WC_Frames_Ajax();

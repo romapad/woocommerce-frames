@@ -33,7 +33,7 @@ jQuery( document ).ready( function($) {
 		var $form               = $( '.variations_form' ),
 			$product_variations = $form.data( 'product_variations' ),
 			data                = {},
-			$totals             = $( '#product-addons-total' );
+			$totals             = $( '#grmpd-frames-total' );
 
 		$form.find( '.variations select' ).each( function() {
 			var attribute_name = $( this ).data( 'attribute_name' ) || $( this ).attr( 'name' );
@@ -47,15 +47,15 @@ jQuery( document ).ready( function($) {
 			$totals.data( 'price', variation.display_price );
 		} else if ( $( variation.price_html ).find('.amount:last').size() ) {
 			product_price = $( variation.price_html ).find('.amount:last').text();
-			product_price = product_price.replace( woocommerce_addons_params.currency_format_symbol, '' );
-			product_price = product_price.replace( woocommerce_addons_params.currency_format_thousand_sep, '' );
-			product_price = product_price.replace( woocommerce_addons_params.currency_format_decimal_sep, '.' );
+			product_price = product_price.replace( grmpd_frames_params.currency_format_symbol, '' );
+			product_price = product_price.replace( grmpd_frames_params.currency_format_thousand_sep, '' );
+			product_price = product_price.replace( grmpd_frames_params.currency_format_decimal_sep, '.' );
 			product_price = product_price.replace(/[^0-9\.]/g, '');
 			product_price = parseFloat( product_price );
 			$totals.data( 'price', product_price );
 		}
 
-		$(this).trigger( 'woocommerce-product-addons-update' );
+		$(this).trigger( 'grmpd-frames-update' );
 	} );
 
 } );

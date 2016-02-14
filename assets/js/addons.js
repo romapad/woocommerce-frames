@@ -2,7 +2,7 @@ jQuery( document ).ready( function($) {
 
 	$.fn.init_addon_totals = function() {
 
-		$(this).on( 'keyup change', '.product-addon input, .product-addon textarea', function() {
+		$(this).on( 'keyup change', '.grmpd-frame input, .grmpd-frame textarea', function() {
 
 			if ( $(this).attr('maxlength') > 0 ) {
 
@@ -18,21 +18,21 @@ jQuery( document ).ready( function($) {
 
 			if ( $(this).attr('maxlength') > 0 ) {
 
-				$(this).after('<small class="chars_remaining"><span>' + $(this).attr('maxlength') + '</span> ' + woocommerce_addons_params.i18n_remaining + '</small>' );
+				$(this).after('<small class="chars_remaining"><span>' + $(this).attr('maxlength') + '</span> ' + grmpd_frames_params.i18n_remaining + '</small>' );
 
 			}
 
 		} );
 
-		$(this).on( 'change', '.product-addon input, .product-addon textarea, .product-addon select, input.qty', function() {
+		$(this).on( 'change', '.grmpd-frame input, .grmpd-frame textarea, .grmpd-frame select, input.qty', function() {
 
-			$(this).trigger( 'woocommerce-product-addons-update' );
+			$(this).trigger( 'grmpd-frames-update' );
 		} );
 
 		$(this).on( 'found_variation', function( event, variation ) {
 
 			var $variation_form = $(this);
-			var $totals         = $variation_form.find( '#product-addons-total' );
+			var $totals         = $variation_form.find( '#grmpd-frames-total' );
 
 			if ( typeof( variation.display_price ) !== 'undefined' ) {
 
@@ -41,23 +41,23 @@ jQuery( document ).ready( function($) {
 			} else if ( $( variation.price_html ).find('.amount:last').size() ) {
 
 				product_price = $( variation.price_html ).find('.amount:last').text();
-				product_price = product_price.replace( woocommerce_addons_params.currency_format_symbol, '' );
-				product_price = product_price.replace( woocommerce_addons_params.currency_format_thousand_sep, '' );
-				product_price = product_price.replace( woocommerce_addons_params.currency_format_decimal_sep, '.' );
+				product_price = product_price.replace( grmpd_frames_params.currency_format_symbol, '' );
+				product_price = product_price.replace( grmpd_frames_params.currency_format_thousand_sep, '' );
+				product_price = product_price.replace( grmpd_frames_params.currency_format_decimal_sep, '.' );
 				product_price = product_price.replace(/[^0-9\.]/g, '');
 				product_price = parseFloat( product_price );
 
 				$totals.data( 'price', product_price );
 			}
 
-			$variation_form.trigger( 'woocommerce-product-addons-update' );
+			$variation_form.trigger( 'grmpd-frames-update' );
 		} );
 
-		$(this).on( 'woocommerce-product-addons-update', function() {
+		$(this).on( 'grmpd-frames-update', function() {
 
 			var total         = 0;
 			var $cart         = $(this);
-			var $totals       = $cart.find( '#product-addons-total' );
+			var $totals       = $cart.find( '#grmpd-frames-total' );
 			var product_price = $totals.data( 'price' );
 			var product_type  = $totals.data( 'type' );
 			var product_id    = $totals.data( 'product-id' );
@@ -132,11 +132,11 @@ jQuery( document ).ready( function($) {
 				total = parseFloat( total * qty );
 
 				var formatted_addon_total = accounting.formatMoney( total, {
-					symbol 		: woocommerce_addons_params.currency_format_symbol,
-					decimal 	: woocommerce_addons_params.currency_format_decimal_sep,
-					thousand	: woocommerce_addons_params.currency_format_thousand_sep,
-					precision 	: woocommerce_addons_params.currency_format_num_decimals,
-					format		: woocommerce_addons_params.currency_format
+					symbol 		: grmpd_frames_params.currency_format_symbol,
+					decimal 	: grmpd_frames_params.currency_format_decimal_sep,
+					thousand	: grmpd_frames_params.currency_format_thousand_sep,
+					precision 	: grmpd_frames_params.currency_format_num_decimals,
+					format		: grmpd_frames_params.currency_format
 				} );
 
 				if ( product_price ) {
@@ -144,21 +144,21 @@ jQuery( document ).ready( function($) {
 					product_total_price = parseFloat( product_price * qty );
 
 					var formatted_grand_total = accounting.formatMoney( product_total_price + total, {
-						symbol 		: woocommerce_addons_params.currency_format_symbol,
-						decimal 	: woocommerce_addons_params.currency_format_decimal_sep,
-						thousand	: woocommerce_addons_params.currency_format_thousand_sep,
-						precision 	: woocommerce_addons_params.currency_format_num_decimals,
-						format		: woocommerce_addons_params.currency_format
+						symbol 		: grmpd_frames_params.currency_format_symbol,
+						decimal 	: grmpd_frames_params.currency_format_decimal_sep,
+						thousand	: grmpd_frames_params.currency_format_thousand_sep,
+						precision 	: grmpd_frames_params.currency_format_num_decimals,
+						format		: grmpd_frames_params.currency_format
 					} );
 
 				}
 
 				var formatted_raw_total = accounting.formatMoney( total_raw + product_raw, {
-					symbol 		: woocommerce_addons_params.currency_format_symbol,
-					decimal 	: woocommerce_addons_params.currency_format_decimal_sep,
-					thousand	: woocommerce_addons_params.currency_format_thousand_sep,
-					precision 	: woocommerce_addons_params.currency_format_num_decimals,
-					format		: woocommerce_addons_params.currency_format
+					symbol 		: grmpd_frames_params.currency_format_symbol,
+					decimal 	: grmpd_frames_params.currency_format_decimal_sep,
+					thousand	: grmpd_frames_params.currency_format_thousand_sep,
+					precision 	: grmpd_frames_params.currency_format_num_decimals,
+					format		: grmpd_frames_params.currency_format
 				} );
 
 				var subscription_details = false;
@@ -176,7 +176,7 @@ jQuery( document ).ready( function($) {
 					}
 				}
 
-				var html = '<dl class="product-addon-totals"><dt>' + woocommerce_addons_params.i18n_addon_total + '</dt><dd><strong><span class="amount">' + formatted_addon_total + '</span></strong></dd>';
+				var html = '<dl class="grmpd-frame-totals"><dt>' + grmpd_frames_params.i18n_addon_total + '</dt><dd><strong><span class="amount">' + formatted_addon_total + '</span></strong></dd>';
 
 				if ( formatted_grand_total && '1' == $totals.data( 'show-grand-total' ) ) {
 
@@ -186,16 +186,16 @@ jQuery( document ).ready( function($) {
 					var price_display_suffix = '';
 
 					// no sufix is present, so we can just output the total
-					if ( ! woocommerce_addons_params.price_display_suffix ) {
-						html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span></strong></dd></dl>';
+					if ( ! grmpd_frames_params.price_display_suffix ) {
+						html = html + '<dt>' + grmpd_frames_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span></strong></dd></dl>';
 						$totals.html( html );
 						$( 'body' ).trigger( 'updated_addons' );
 						return;
 					}
 
 					// a suffix is present, but no special labels are used - meaning we don't need to figure out any other special values - just display the playintext value
-					if ( false === ( woocommerce_addons_params.price_display_suffix.indexOf( '{price_including_tax}' ) > -1 ) && false === ( woocommerce_addons_params.price_display_suffix.indexOf( '{price_excluding_tax}' ) > -1 ) ) {
-						html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + woocommerce_addons_params.price_display_suffix + '</strong></dd></dl>';
+					if ( false === ( grmpd_frames_params.price_display_suffix.indexOf( '{price_including_tax}' ) > -1 ) && false === ( grmpd_frames_params.price_display_suffix.indexOf( '{price_excluding_tax}' ) > -1 ) ) {
+						html = html + '<dt>' + grmpd_frames_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + grmpd_frames_params.price_display_suffix + '</strong></dd></dl>';
 						$totals.html( html );
 						$( 'body' ).trigger( 'updated_addons' );
 						return;
@@ -204,10 +204,10 @@ jQuery( document ).ready( function($) {
 					// If prices are entered exclusive of tax but display inclusive, we have enough data from our totals above
 					// to do a simple replacement and output the totals string
 					if (  'excl' === tax_mode && 'incl' === tax_display_mode ) {
-						price_display_suffix = '<small class="woocommerce-price-suffix">' + woocommerce_addons_params.price_display_suffix + '</small>';
+						price_display_suffix = '<small class="woocommerce-price-suffix">' + grmpd_frames_params.price_display_suffix + '</small>';
 						price_display_suffix = price_display_suffix.replace( '{price_including_tax}', formatted_grand_total );
 						price_display_suffix = price_display_suffix.replace( '{price_excluding_tax}', formatted_raw_total );
-						html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + price_display_suffix + ' </strong></dd></dl>';
+						html = html + '<dt>' + grmpd_frames_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + price_display_suffix + ' </strong></dd></dl>';
 						$totals.html( html );
 						$( 'body' ).trigger( 'updated_addons' );
 						return;
@@ -216,10 +216,10 @@ jQuery( document ).ready( function($) {
 					// Prices are entered inclusive of tax mode but displayed exclusive, we have enough data from our totals above
 					// to do a simple replacement and output the totals string.
 					if ( 'incl' === tax_mode && 'excl' === tax_display_mode ) {
-						price_display_suffix = '<small class="woocommerce-price-suffix">' + woocommerce_addons_params.price_display_suffix + '</small>';
+						price_display_suffix = '<small class="woocommerce-price-suffix">' + grmpd_frames_params.price_display_suffix + '</small>';
 						price_display_suffix = price_display_suffix.replace( '{price_including_tax}', formatted_raw_total );
 						price_display_suffix = price_display_suffix.replace( '{price_excluding_tax}', formatted_grand_total );
-						html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + price_display_suffix + ' </strong></dd></dl>';
+						html = html + '<dt>' + grmpd_frames_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + price_display_suffix + ' </strong></dd></dl>';
 						$totals.html( html );
 						$( 'body' ).trigger( 'updated_addons' );
 						return;
@@ -229,44 +229,44 @@ jQuery( document ).ready( function($) {
 					// to get accurate totals. We can get these values with a special Ajax function
 					$.ajax( {
 						type: 'POST',
-						url:  woocommerce_addons_params.ajax_url,
+						url:  grmpd_frames_params.ajax_url,
 						data: {
-							action: 'wc_product_addons_calculate_tax',
+							action: 'wc_frames_calculate_tax',
 							total:  product_total_price + total,
 							product_id: product_id
 						},
 						success: 	function( code ) {
 							result = $.parseJSON( code );
 							if ( result.result == 'SUCCESS' ) {
-								price_display_suffix = '<small class="woocommerce-price-suffix">' + woocommerce_addons_params.price_display_suffix + '</small>';
+								price_display_suffix = '<small class="woocommerce-price-suffix">' + grmpd_frames_params.price_display_suffix + '</small>';
 								var formatted_price_including_tax = accounting.formatMoney( result.price_including_tax, {
-									symbol 		: woocommerce_addons_params.currency_format_symbol,
-									decimal 	: woocommerce_addons_params.currency_format_decimal_sep,
-									thousand	: woocommerce_addons_params.currency_format_thousand_sep,
-									precision 	: woocommerce_addons_params.currency_format_num_decimals,
-									format		: woocommerce_addons_params.currency_format
+									symbol 		: grmpd_frames_params.currency_format_symbol,
+									decimal 	: grmpd_frames_params.currency_format_decimal_sep,
+									thousand	: grmpd_frames_params.currency_format_thousand_sep,
+									precision 	: grmpd_frames_params.currency_format_num_decimals,
+									format		: grmpd_frames_params.currency_format
 								} );
 								var formatted_price_excluding_tax = accounting.formatMoney( result.price_excluding_tax, {
-									symbol 		: woocommerce_addons_params.currency_format_symbol,
-									decimal 	: woocommerce_addons_params.currency_format_decimal_sep,
-									thousand	: woocommerce_addons_params.currency_format_thousand_sep,
-									precision 	: woocommerce_addons_params.currency_format_num_decimals,
-									format		: woocommerce_addons_params.currency_format
+									symbol 		: grmpd_frames_params.currency_format_symbol,
+									decimal 	: grmpd_frames_params.currency_format_decimal_sep,
+									thousand	: grmpd_frames_params.currency_format_thousand_sep,
+									precision 	: grmpd_frames_params.currency_format_num_decimals,
+									format		: grmpd_frames_params.currency_format
 								} );
 								price_display_suffix = price_display_suffix.replace( '{price_including_tax}', formatted_price_including_tax );
 								price_display_suffix = price_display_suffix.replace( '{price_excluding_tax}', formatted_price_excluding_tax );
-								html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + price_display_suffix + ' </strong></dd></dl>';
+								html = html + '<dt>' + grmpd_frames_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span> ' + price_display_suffix + ' </strong></dd></dl>';
 								$totals.html( html );
 								$( 'body' ).trigger( 'updated_addons' );
 							} else {
 								console.log( result );
-								html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span></strong></dd></dl>';
+								html = html + '<dt>' + grmpd_frames_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span></strong></dd></dl>';
 								$totals.html( html );
 								$( 'body' ).trigger( 'updated_addons' );
 							}
 						},
 						error: function() {
-							html = html + '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span></strong></dd></dl>';
+							html = html + '<dt>' + grmpd_frames_params.i18n_grand_total + '</dt><dd><strong><span class="amount">' + formatted_grand_total + '</span></strong></dd></dl>';
 							$totals.html( html );
 							$( 'body' ).trigger( 'updated_addons' );
 						}
@@ -278,7 +278,7 @@ jQuery( document ).ready( function($) {
 
 		} );
 
-		$(this).find( '.addon-custom, .addon-custom-textarea, .product-addon input, .product-addon textarea, .product-addon select, input.qty' ).change();
+		$(this).find( '.addon-custom, .addon-custom-textarea, .grmpd-frame input, .grmpd-frame textarea, .grmpd-frame select, input.qty' ).change();
 
 		// When default variation exists, 'found_variation' must be triggered
 		$(this).find( '.variations select' ).change();

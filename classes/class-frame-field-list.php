@@ -2,7 +2,7 @@
 /**
  * Checkbox/radios field
  */
-class Product_Addon_Field_List extends Product_Addon_Field {
+class Grmpd_Frame_Field_List extends Grmpd_Frame_Field {
 
 	/**
 	 * Validate an addon
