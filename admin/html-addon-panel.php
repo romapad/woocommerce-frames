@@ -26,7 +26,7 @@
     <div class="options_group">
 		<p class="form-field">
         <label for="_frames_exclude_global"><?php _e( 'Frames Exclusion', 'grmpd-frames' ); ?></label>
-        <input id="_frames_exclude_global" name="_frames_exclude_global" class="checkbox" type="checkbox" value="1" <?php checked( get_post_meta( $post->ID, '_frames_exclude_global', TRUE ), 1 ); ?>/><span class="description"><?php _e( 'Check this to exclude this product from all FRames', 'grmpd-frames' ); ?></span>
+        <input id="_frames_exclude_global" name="_frames_exclude_global" class="checkbox" type="checkbox" value="1" <?php checked( get_post_meta( $post->ID, '_frames_exclude_global', TRUE ), 1 ); ?>/><span class="description"><?php _e( 'Check this to exclude this product from all Frames', 'grmpd-frames' ); ?></span>
 		</p>
 	</div>
 	<?php endif; ?>
@@ -84,6 +84,7 @@
 
 				$addon['name'] 			= '';
 				$addon['description']	= '';
+                $addon['formula']	= '';
 				$addon['required'] 		= '';
 				$addon['options'] 		= array(
 					Grmpd_Frame_Admin::get_new_addon_option()

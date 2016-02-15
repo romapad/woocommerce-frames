@@ -255,6 +255,7 @@ class Grmpd_Frame_Admin {
 		if ( isset( $_POST[ 'grmpd_frame_name' ] ) ) {
 			 $addon_name         = $_POST['grmpd_frame_name'];
 			 $addon_description  = $_POST['grmpd_frame_description'];
+			 $addon_formula  = $_POST['grmpd_frame_formula'];
 			 $addon_position     = $_POST['grmpd_frame_position'];
 			 $addon_required     = isset( $_POST['grmpd_frame_required'] ) ? $_POST['grmpd_frame_required'] : array();
 
@@ -301,6 +302,7 @@ class Grmpd_Frame_Admin {
 				$data                = array();
 				$data['name']        = sanitize_text_field( stripslashes( $addon_name[ $i ] ) );
 				$data['description'] = wp_kses_post( stripslashes( $addon_description[ $i ] ) );
+                 $data['formula'] = wp_kses_post( stripslashes( $addon_formula[ $i ] ) );
 				$data['position']    = absint( $addon_position[ $i ] );
 				$data['options']     = $addon_options;
 				$data['required']    = isset( $addon_required[ $i ] ) ? 1 : 0;

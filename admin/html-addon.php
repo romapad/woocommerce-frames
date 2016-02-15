@@ -25,10 +25,15 @@ global $post;
 				</td>
 			</tr>
 			<tr>
-				<td class="addon_description" colspan="2">
+				<td class="addon_description">
 					<label for="addon_description_<?php echo $loop; ?>"><?php _e( 'Group Description', 'grmpd-frames' ); ?></label>
 					<textarea cols="20" id="addon_description_<?php echo $loop; ?>" rows="3" name="grmpd_frame_description[<?php echo $loop; ?>]"><?php echo esc_textarea( $addon['description'] ) ?></textarea>
 				</td>
+				<td class="addon_formula">
+				<?php // add formula to calculate total price based on some parametrs. You may use math operators and following elements: H - for picture height, W - for picture width, FW - for frame width, FP - for frame price. Formula could be as follows: ((H + W) * 2 + (FW * 8))*FP. If formula field is empty that means total will calculate just based on frame price (assume price for whole frame).  ?>
+					<label for="addon_formula_<?php echo $loop; ?>"><?php _e( 'Count formula', 'grmpd-frames' ); ?></label>
+					<textarea cols="20" id="addon_formula_<?php echo $loop; ?>" rows="3" name="grmpd_frame_formula[<?php echo $loop; ?>]"><?php echo esc_textarea( $addon['formula'] ) ?></textarea>
+				</td>				
 			</tr>
 			<?php do_action( 'woocommerce_frames_panel_before_options', $post, $addon, $loop ); ?>
 			<tr>

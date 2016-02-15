@@ -141,6 +141,7 @@ class Grmpd_Frame_Display {
 						'required'    => $addon['required'],
 						'name'        => $addon['name'],
 						'description' => $addon['description'],
+                        'formula' => $addon['formula'],
 					), 'grmpd-frames', $this->plugin_path() . '/templates/' );
 
 				echo $this->get_addon_html( $addon );

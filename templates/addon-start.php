@@ -10,4 +10,8 @@
 		<?php echo '<div class="addon-description">' . wpautop( wptexturize( $description ) ) . '</div>'; ?>
 	<?php endif; ?>
 
+	<?php if ( $formula ) : ?>
+		<?php echo '<div class="addon-formula">' . wpautop( wptexturize( $formula ) ) . '</div>'; ?>
+	<?php endif; ?>
+
 	<?php do_action( 'wc_grmpd_frame_options', $addon ); ?>
